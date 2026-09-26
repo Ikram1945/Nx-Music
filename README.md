@@ -2,13 +2,11 @@
 
 # 🎵 Harmony Melody (Nx Music)
 
-**Pemutar musik lokal untuk Android** — dibangun dengan **Java** (Java 21, target API 36).
+**Pemutar musik lokal untuk Android** — Java 21 + Kotlin, `compileSdk` 36, `minSdk` 26.
 
-Memutar file audio yang tersimpan di perangkat lewat `MediaStore`, dengan dukungan **background playback**, notifikasi media, equalizer, efek audio, daftar putar, favorit, statistik pemutaran, widget layar utama, dan **bar spectrum real-time**.
-
-> **Sesi terakhir:** memperbaiki bar spectrum (`SpectrumView`) yang tidak
-> mengikuti irama lagu — pemetaan frekuensi salah, bar identik satu sama lain,
-> dan treble nyaris diam. Rincian di [📊 Spectrum Bar](#-spectrum-bar-spectrumview).
+Memutar file audio di perangkat lewat `MediaStore`, dengan **background playback**,
+notifikasi media, equalizer, efek audio, daftar putar, favorit, statistik pemutaran,
+widget layar utama, dan **bar spectrum real-time**.
 
 </div>
 
@@ -19,6 +17,7 @@ Memutar file audio yang tersimpan di perangkat lewat `MediaStore`, dengan dukung
 ### Pemutaran
 - 🎧 Putar & jeda musik lokal dari perangkat
 - ⏭️ Next / Previous, **Shuffle**, **Repeat** (off → all → one)
+- 🔀 **Crossfade** — peralihan antar lagu yang mulus
 - 📊 Seek bar + progress real-time
 - 🖼️ Ekstraksi & animasi **artwork album** (rotasi saat diputar + glow berdenyut)
 - 👆 **Gesture seek** — swipe kiri/kanan pada artwork untuk maju/mundur 5 detik
@@ -39,6 +38,7 @@ Memutar file audio yang tersimpan di perangkat lewat `MediaStore`, dengan dukung
 ### Pencarian & Navigasi
 - 🔍 **Pencarian live** (judul/artis) dengan tombol hapus
 - ⭐ **Favorit** — tandai lagu favorit & filter hanya favorit
+- 🗂️ **Folder** — telusuri lagu per folder di perangkat
 - 🧭 Navigasi bawah: **Beranda / Perpustakaan / Daftar Putar**
 - 🕐 **Sleep Timer** — hentikan pemutaran otomatis setelah 10–120 menit
 
@@ -63,6 +63,8 @@ Memutar file audio yang tersimpan di perangkat lewat `MediaStore`, dengan dukung
 | Perpustakaan | `SongListActivity` | Daftar lagu + pencarian + filter favorit |
 | Daftar Putar | `PlaylistActivity` | Kelola daftar putar |
 | Detail Daftar Putar | `PlaylistDetailActivity` | Isi playlist, tambah/hapus lagu, putar |
+| Folder | `FolderActivity` | Daftar folder yang berisi lagu |
+| Detail Folder | `FolderDetailActivity` | Lagu di dalam satu folder |
 | Statistik | `StatisticsActivity` | Statistik & riwayat pemutaran |
 | Pengaturan | `SettingsActivity` | Tema, urutan lagu, hapus riwayat |
 
@@ -72,16 +74,25 @@ Memutar file audio yang tersimpan di perangkat lewat `MediaStore`, dengan dukung
 
 | Aspek | Keterangan |
 |-------|------------|
-| Bahasa | Java 21 |
+| Bahasa | **Java 21** + **Kotlin** (K2) |
 | UI | `Activity` + layout XML, Material 3 (`Material Components`) |
 | Pemutaran | `android.media.MediaPlayer` dalam foreground service |
 | MediaSession | `androidx.media` (`MediaSessionCompat`, `MediaStyle`) |
-| Binding | `ViewBinding` |
-| Build | Gradle (editor CodeAssist / Tyron) |
-| Min / Target SDK | 26 / 34 |
+| Build | **ApkBuild** — build system di perangkat, tanpa Gradle (`app/module.toml`) |
+| compileSdk / minSdk / targetSdk | 36 / 26 / 36 |
 | Persistensi | `SharedPreferences` (playlist, favorit, statistik, pengaturan, efek) |
 
-**Dependensi utama:** `androidx.appcompat`, `androidx.core`, `androidx.media`, `com.google.android.material`.
+**Dependensi** (dari `app/module.toml`):
+
+```toml
+implementation = [
+  "androidx.appcompat:appcompat:1.7.0",
+  "com.google.android.material:material:1.12.0",
+  "androidx.media3:media3-exoplayer:1.7.0",
+  "androidx.media:media:1.7.0",
+  "androidx.annotation:annotation:1.9.1",
+]
+```
 
 ---
 
@@ -90,42 +101,60 @@ Memutar file audio yang tersimpan di perangkat lewat `MediaStore`, dengan dukung
 ```
 app/src/main/
 ├── AndroidManifest.xml
-├── java/com/nx/music/          # Kode sumber
-│   ├── MusicService.java       # Foreground service — pemilik MediaPlayer
-│   ├── PlaybackController.java # Facade/singleton untuk mengontrol service
-│   ├── MainActivity.java       # Layar beranda (launcher)
-│   ├── PlayerActivity.java     # Layar pemutar
-│   ├── SongListActivity.java   # Perpustakaan lagu
-│   ├── PlaylistActivity.java   # Daftar putar
+├── java/com/nx/music/           # Kode sumber Java (27 file)
+│   ├── MusicService.java        # Foreground service — pemilik MediaPlayer
+│   ├── PlaybackController.java  # Facade/singleton untuk mengontrol service
+│   ├── MainActivity.java        # Layar beranda (launcher)
+│   ├── PlayerActivity.java      # Layar pemutar
+│   ├── SongListActivity.java    # Perpustakaan lagu
+│   ├── PlaylistActivity.java    # Daftar putar
 │   ├── PlaylistDetailActivity.java
-│   ├── StatisticsActivity.java # Statistik & riwayat
-│   ├── SettingsActivity.java   # Pengaturan
-│   ├── MusicWidgetProvider.java# Widget layar utama
-│   ├── Song.java               # Model data lagu
-│   ├── SongLoader.java         # Query MediaStore
-│   ├── SongAdapter.java        # Adapter daftar lagu
-│   ├── PlaylistHelper.java     # Persistensi playlist
-│   ├── FavoritesHelper.java    # Persistensi favorit
-│   ├── PlaybackStats.java      # Persistensi statistik & riwayat
-│   ├── EqualizerHelper.java    # Wrapper Equalizer
-│   ├── AudioEffectsHelper.java # Wrapper Bass/Virtualizer/Loudness
-│   ├── ThemeHelper.java        # Manajemen tema kustom
-│   ├── ArtworkLoader.java      # Ekstraktor artwork
-│   ├── ArtworkGestureListener.java # Gesture seek
-│   └── … (listener & helper lain)
+│   ├── FolderActivity.java      # Telusuri per folder
+│   ├── FolderDetailActivity.java
+│   ├── StatisticsActivity.java  # Statistik & riwayat
+│   ├── SettingsActivity.java    # Pengaturan
+│   ├── MusicWidgetProvider.java # Widget layar utama
+│   ├── SongAdapter.java         # Adapter daftar lagu
+│   ├── EqualizerHelper.java     # Wrapper Equalizer
+│   ├── AudioEffectsHelper.java  # Wrapper Bass/Virtualizer/Loudness
+│   ├── ArtworkLoader.java       # Ekstraktor artwork
+│   ├── SpectrumView.java        # Bar FFT real-time
+│   └── …                        # listener & helper lain
+├── kotlin/                      # Kode sumber Kotlin (9 file)
+│   ├── com/nx/music/
+│   │   ├── Song.kt                  # Model data lagu
+│   │   ├── SongLoader.kt            # Query MediaStore + pengelompokan folder
+│   │   ├── PlaylistHelper.kt        # Persistensi playlist
+│   │   ├── FavoritesHelper.kt       # Persistensi favorit
+│   │   ├── PlaybackStats.kt         # Persistensi statistik & riwayat
+│   │   ├── PlaybackHistoryEntry.kt  # Entri riwayat pemutaran
+│   │   ├── ThemeHelper.kt           # Manajemen tema kustom
+│   │   └── ScheduledRunnable.kt     # Runnable yang menjadwalkan ulang diri
+│   └── com/ikram/system/TimeUtils.kt # Format durasi (murni java.*)
 └── res/
     ├── layout/                 # Layout semua layar & item
     ├── drawable/               # Ikon & background (vektor + shape)
-    ├── drawable-night/         # Varian mode gelap
     ├── values/ values-night/   # strings, colors, themes
     ├── color/ menu/ xml/ mipmap/
 ```
 
 ### Catatan arsitektur penting
-1. **State statis di `MusicService`** — `MediaPlayer`, `playOrder`, `currentIndex`, `repeatMode`, `shuffle` disimpan sebagai field `static` agar Activity bisa membaca sinkron dari proses yang sama.
-2. **Audio session** — Equalizer & efek audio terikat ke audio session `MediaPlayer` via `getAudioSessionId()`; karena session bisa berubah saat ganti lagu, `attach()` dipanggil ulang di `onResume`.
-3. **`PlaybackController`** adalah singleton; `create(Context)` memastikan service foreground aktif.
-4. **Musik tidak dihentikan** di `onDestroy` Activity — pemutaran sepenuhnya dikelola `MusicService`.
+
+1. **State statis di `MusicService`** — `MediaPlayer`, `playOrder`, `currentIndex`,
+   `repeatMode`, `shuffle` disimpan sebagai field `static` agar Activity bisa membaca
+   sinkron dari proses yang sama.
+2. **Audio session** — Equalizer & efek audio terikat ke audio session `MediaPlayer`
+   via `getAudioSessionId()`; karena session bisa berubah saat ganti lagu, `attach()`
+   dipanggil ulang di `onResume`.
+3. **`PlaybackController`** adalah singleton; `create(Context)` memastikan service
+   foreground aktif.
+4. **Musik tidak dihentikan** di `onDestroy` Activity — pemutaran sepenuhnya dikelola
+   `MusicService`.
+5. **Kotlin → Java searah saja.** Build system mengompilasi Kotlin **lebih dulu**
+   daripada Java, dan classpath Kotlin hanya berisi `R.jar` + library — bukan output
+   Java. Karena itu **Kotlin tidak boleh merujuk kelas Java** (mis. `SettingsActivity`).
+   Bila butuh nilai dari kelas Java, duplikasi logikanya di Kotlin atau lewatkan
+   sebagai parameter.
 
 ---
 
@@ -135,6 +164,7 @@ app/src/main/
 |------|-----------|
 | `READ_MEDIA_AUDIO` | Android 13+ — membaca audio perangkat |
 | `READ_EXTERNAL_STORAGE` | Pra-Android 13 — membaca audio |
+| `RECORD_AUDIO` | `Visualizer` (bar spectrum) |
 | `FOREGROUND_SERVICE` | Menjalankan service pemutaran di latar |
 | `FOREGROUND_SERVICE_MEDIA_PLAYBACK` | Tipe foreground service media playback |
 | `POST_NOTIFICATIONS` | Android 13+ — notifikasi media |
@@ -143,24 +173,41 @@ app/src/main/
 
 ## 🚀 Build
 
-Proyek dikembangkan menggunakan editor **CodeAssist / Tyron** (bukan Android Studio).
+Proyek dibangun dengan **ApkBuild** — build system di perangkat, **tanpa Gradle**.
+Konfigurasi ada di `app/module.toml` (bukan `build.gradle`).
 
-```sh
-# Build debug APK (via gradle wrapper)
-./gradlew assembleDebug
+**Di UI ApkBuild:** buka folder proyek → tekan **Build**.
+
+Hasil build:
+
 ```
-
-APK hasil build berada di `app/build/outputs/apk/`.
+app/build/output.apk
+```
 
 ### Cek error sebelum build (opsional)
 
-`check_errors.sh` memvalidasi error Java dengan `javac` + `android.jar` sebelum build di CodeAssist:
+`check_errors.sh` memvalidasi error Java memakai `javac` + `android.jar` sebelum build:
 
 ```sh
 sh check_errors.sh
 ```
 
-> **Catatan:** Error yang tersisa setelah menjalankan script umumnya false-positive karena library androidx tidak ada di classpath (bukan karena kode). Untuk validasi penuh, build langsung di CodeAssist.
+> **Catatan:** script di atas hanya memeriksa kode Java. Error Kotlin dan error
+> androidx baru muncul saat build di ApkBuild.
+
+### Catatan build
+
+- **Compiler Kotlin:** `kotlinExec = "forkworker"` di `module.toml` menjalankan
+  compiler di **VM persisten** (heap terpisah, environment K2 hangat). Build berulang
+  tak membayar biaya cold-start.
+- **Metadata Kotlin:** compiler K2 2.4 menulis metadata lebih baru daripada yang
+  dipahami D8/R8 bawaan. Build system membuang anotasi `@kotlin.Metadata` sebelum
+  dexing (lihat `KotlinMetadataStrip`), sebab D8 dapat **menjatuhkan seluruh output
+  dex** bila gagal me-rewrite metadata — gejalanya "build gagal tanpa pesan error".
+- **Kotlin stdlib tunggal:** proyek ini menyertakan `kotlin-stdlib` sebagai
+  dependensi, jadi build system **tidak** menambahkan stdlib bawaan toolchain.
+  Dua stdlib beda versi di classpath membuat D8 berhenti dengan
+  `Classpath type already present`.
 
 ---
 
@@ -215,66 +262,6 @@ Bar spectrum di layar Player. Sumber data `android.media.audiofx.Visualizer`
 - Navigasi per album / artis
 - Tombol Stop / hentikan di player
 - Export / import playlist (`.m3u`)
-
-
----
-
-## 🧾 Catatan sesi — sapaan, animasi, dan bug pipeline build
-
-### 1. UI baru di PlayerActivity
-- Blok **sapaan** (`greeting_card`) + teks penyemangat (`txt_motivation`) + **5 bar equalizer**
-  (`bar_pulse_1..5`) di atas artwork.
-- **Kartu info** (`info_card`, `txt_info_title`, `txt_info_value`) di atas kontrol utama.
-- Sapaan dipilih menurut jam (`greetingForHour`), penyemangat bergiliran tiap 6 detik,
-  bar berdenyut `scaleY` dengan durasi/delay berselang-seling.
-- Animasi: `playGreetingEntrance()` (fade + slide) dipanggil dari `onCreate` **dan**
-  `onResume`; `playTitlePop()` saat lagu berganti.
-- **Penting:** `onPause` mematikan bar + rotasi, jadi `onResume` **wajib** menyalakannya
-  kembali — kalau tidak, sapaan/bar "mati" setiap kembali dari layar lain.
-
-### 2. UI baru di MainActivity (home)
-- `txt_greeting` kini **dinamis** (sebelumnya statis "Selamat Mendengarkan").
-- `txt_home_motivation` (bergiliran tiap 7 detik) + 4 bar (`home_bar_1..4`).
-- **Jebakan Java:** `homeMotivationRunnable` **harus dideklarasikan setelah** `handler`.
-  Field diinisialisasi berurutan; merujuk `handler` di atas deklarasinya menghasilkan
-  ECJ: *"Cannot reference a field before it is defined"*.
-
-### 3. Perbaikan pipeline build (`android-code/app/.../build/BuildPipeline.java`)
-Semua ini bug nyata yang membuat **build sukses tapi aplikasi tetap crash**:
-
-| # | Bug | Perbaikan |
-| --- | --- | --- |
-| 1 | `gen/` dihapus di awal stage, lalu `link reuse` early-return tanpa menulis R.java → id baru tak ada di R | `gen/` tidak dihapus di awal; `link reuse` dibatalkan bila `gen/R.java` kosong |
-| 2 | `R.class` diekstrak dari `R.jar` **setelah** ECJ → compile inkremental membaca R lama dari `classes/` | ekstraksi dipindah ke **sebelum** ECJ |
-| 3 | `rFp` hanya `lastResFp#count` → `R.jar` basi dipertahankan walau `resources.ap_` berubah | `rFp` menyertakan hash `resources.ap_` |
-| 4 | Build **gagal** tetap meninggalkan `output.apk` + `.fingerprint` → build berikutnya "sudah terbaru (skip)" memakai APK rusak | saat gagal: buang `output.apk`, `.fingerprint`, `classes/`, `.stage-cache`, `gen/`, `R.jar`, `.rjar-fp` |
-| 5 | `aapt2 link -o resources.ap_` menulis **langsung** ke tujuan → gagal di tengah meninggalkan arsc terpotong | link ke file `.new-*` lalu `Files.move` atomic; gagal ⇒ buang `resources.ap_` + `.resap-fp` |
-| 6 | `aapt2 compile user` gagal → `user.zip` + `.userfp` lama tertinggal | keduanya dibuang saat gagal |
-| 7 | `installApk` pakai `Intent.ACTION_VIEW` dengan `versionCode` tetap 1 → installer sistem menolak senyap, APK lama tetap jalan | coba `pm install -r -d` dulu; installer sistem hanya fallback |
-
-**Yang sengaja TIDAK dibuang saat build gagal:** `flat/user.zip`, `.userfp`,
-`resources.ap_`, `.resap-fp` — semuanya hasil stage `resource` yang selesai sebelum
-`compileJava`, jadi isinya sah; membuangnya hanya memaksa `aapt2 link` (~9–11 s) jalan lagi.
-
-### 4. Cara memeriksa id/resource dengan benar
-Jangan menulis parser ARSC sendiri — mudah salah baca panjang string (UTF-8 vs UTF-16,
-byte NUL) dan menghasilkan kesimpulan palsu. Pakai:
-
-```sh
-aapt2 dump resources <apk> | grep 'id/list_songs'
-aapt2 dump xmltree  <apk> --file res/layout/activity_main.xml
-```
-
-Hasil yang benar untuk kasus terakhir:
-
-```
-R.id.list_songs  = 0x7f080114   (R.java / R.jar)
-id/list_songs    = 0x7f080114   (resources.arsc)
-ListView @id     = 0x7f080114   (res/layout/activity_main.xml di APK)
-```
-
-Ketiganya cocok ⇒ APK konsisten; kalau aplikasi masih crash, penyebabnya **bukan**
-resource/id, melainkan tahap pemasangan (`versionCode` sama + installer sistem).
 
 ---
 
