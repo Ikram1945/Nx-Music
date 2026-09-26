@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Latar track bar statistik. Memakai surface_container_highest (bukan warna
+     hardcode) agar ikut menyesuaikan mode gelap: warna lama #E6E0EC tetap
+     terang di tema gelap sehingga tampak janggal. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/surface_container_highest" />
+    <corners android:radius="10dp" />
+</shape>

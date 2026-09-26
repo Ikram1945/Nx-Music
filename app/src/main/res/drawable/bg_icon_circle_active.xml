@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tombol icon bulat AKTIF (untuk sleep timer & tombol header lain saat aktif):
+     latar biru lembut mencolok di atas krem, dengan bingkai biru -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+        <corners android:radius="8dp"/>
+    <solid android:color="#5B6F99"/>
+    <stroke
+        android:width="0dp"
+        android:color="#00000000"/>
+</shape>

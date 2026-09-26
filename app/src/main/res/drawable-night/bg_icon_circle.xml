@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tombol icon bulat elegan untuk mode gelap: latar navy medium agar
+     kontras dengan latar gelap aplikasi, ikon putih tetap terbaca -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+        <corners android:radius="8dp"/>
+    <solid android:color="#33405C"/>
+    <stroke
+        android:width="0dp"
+        android:color="#00000000"/>
+</shape>

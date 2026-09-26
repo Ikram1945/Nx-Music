@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Efek cahaya lembut (glow) navy halus di belakang artwork -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <gradient
+        android:startColor="#334A5C80"
+        android:centerColor="#224A5C80"
+        android:endColor="#004A5C80"
+        android:type="radial"
+        android:gradientRadius="180dp"/>
+</shape>

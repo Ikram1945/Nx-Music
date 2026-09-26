@@ -1,0 +1,34 @@
+version = 2
+
+[module]
+type = "android-app"
+name = "app"
+languageLevel = "JAVA_21"
+output = "build/classes"
+
+[sourceSets.main]
+scope = "IMPLEMENTATION"
+java = ["src/main/java"]
+res = ["src/main/res"]
+
+[android]
+namespace = "com.nx.music"
+compileSdk = 36
+minSdk = 26
+targetSdk = 36
+manifest = "src/main/AndroidManifest.xml"
+versionCode = 4
+versionName = "1.0"
+isApplication = true
+
+[build]
+dexMode = "auto"
+parallelDex = "false"
+javaExec = "inprocess"
+kotlinExec = "forkworker"
+kotlinWorkerHeapMb = 0
+
+dexMergeForks = 0
+
+[dependencies]
+implementation = ["androidx.appcompat:appcompat:1.7.0", "com.google.android.material:material:1.12.0", "androidx.media3:media3-exoplayer:1.7.0", "androidx.media:media:1.7.0", "androidx.annotation:annotation:1.9.1"]

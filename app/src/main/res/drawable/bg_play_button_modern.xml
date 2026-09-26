@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Tombol play modern ala NxTimer: gradasi navy -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="oval">
+    <gradient
+        android:startColor="#FF2F3A4F"
+        android:centerColor="#FF3E4E6B"
+        android:endColor="#FF4A5C80"
+        android:angle="315"/>
+    <stroke
+        android:width="0dp"
+        android:color="#00000000"/>
+</shape>

@@ -1,0 +1,31 @@
+# ---- Artefak build (jangan pernah di-commit) ----
+build/
+app/build/
+*.apk
+*.jar
+*.dex
+*.class
+
+# Cache/tahap build
+app/build/.stage-cache/
+app/build/.fingerprint
+app/build/.pkg-fp
+app/build/.resap-fp
+app/build/.rjar-fp
+app/build/.userfp
+app/build/class-manifest.txt
+app/build/console.log
+app/build/libraries.json
+app/build/source-hash.txt
+
+# ---- Backup sesi (salinan kerja lokal, bukan bagian proyek) ----
+.bak-*/
+*.bak
+*.bak-*
+*.bak-header
+
+# ---- Editor / OS ----
+.idea/
+*.iml
+.DS_Store
+Thumbs.db

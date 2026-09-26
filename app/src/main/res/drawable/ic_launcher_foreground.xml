@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <!-- Batang not musik (beamed note) -->
+    <path android:fillColor="#FFFFFFFF"
+        android:pathData="M40,32 L70,27 L70,60 L68,60 L68,32 L42,37 L42,64 L40,64 Z"/>
+    <!-- Kepala not kiri -->
+    <path android:fillColor="#FFFFFFFF"
+        android:pathData="M48,64 m-9,0 a9,9 0 1 0 18,0 a9,9 0 1 0 -18,0"/>
+    <!-- Kepala not kanan -->
+    <path android:fillColor="#FFFFFFFF"
+        android:pathData="M78,64 m-9,0 a9,9 0 1 0 18,0 a9,9 0 1 0 -18,0"/>
+</vector>

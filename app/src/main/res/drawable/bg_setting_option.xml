@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Latar satu baris pilihan pengaturan (RadioButton/Switch).
+
+     Sengaja memakai warna TETAP (tidak ikut tema): radio button-nya sendiri
+     dikunci hitam, jadi latarnya pun harus tetap agar kontrasnya terjamin di
+     tema terang maupun gelap. Kalau latar ikut tema, di tema gelap radio hitam
+     akan tenggelam. -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_checked="true">
+        <shape android:shape="rectangle">
+            <solid android:color="@color/setting_option_bg_selected"/>
+            <corners android:radius="14dp"/>
+            <stroke
+                android:width="2dp"
+                android:color="@color/setting_radio_fixed"/>
+        </shape>
+    </item>
+    <item>
+        <shape android:shape="rectangle">
+            <solid android:color="@color/setting_option_bg"/>
+            <corners android:radius="14dp"/>
+            <stroke
+                android:width="1dp"
+                android:color="@color/setting_option_border"/>
+        </shape>
+    </item>
+</selector>

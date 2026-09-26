@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Layout notifikasi media kustom (RemoteViews).
+  Tampilan modern: artwork bulat di kiri, judul + artis di tengah,
+  dan tombol prev/play-pause/next di kanan dengan latar gradasi ungu.
+
+  CATATAN: RemoteViews TIDAK mendukung setScaleType via kode, sehingga
+  scaleType dikunci lewat XML dan artwork/ikon fallback memakai dua
+  ImageView bertumpuk yang di-swap dengan setViewVisibility.
+-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
+    android:background="@drawable/bg_main_gradient"
+    android:padding="12dp"
+    android:minHeight="64dp">
+
+    <!-- Artwork bulat: frame + dua gambar bertumpuk -->
+    <FrameLayout
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:layout_gravity="center_vertical"
+        android:background="@drawable/bg_artwork_frame">
+
+        <!-- Sampul album (centerCrop, memenuhi frame bulat) -->
+        <ImageView
+            android:id="@+id/np_artwork"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"/>
+
+        <!-- Ikon fallback ketika tidak ada sampul (kecil di tengah) -->
+        <ImageView
+            android:id="@+id/np_artwork_fallback"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerInside"
+            android:padding="16dp"
+            android:src="@drawable/ic_music_note"
+            android:tint="@color/on_surface_variant"
+            android:visibility="gone"/>
+    </FrameLayout>
+
+    <!-- Kolom judul + artis -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:paddingStart="12dp"
+        android:paddingEnd="8dp"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:id="@+id/np_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/no_playing"
+            android:textColor="@color/on_surface"
+            android:textSize="15sp"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end"/>
+
+        <TextView
+            android:id="@+id/np_artist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/unknown_artist"
+            android:textColor="@color/on_surface_variant"
+            android:textSize="13sp"
+            android:maxLines="1"
+            android:ellipsize="end"/>
+    </LinearLayout>
+
+    <!-- Tombol prev -->
+    <ImageView
+        android:id="@+id/np_prev"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:padding="9dp"
+        android:src="@drawable/ic_prev"
+        android:tint="@color/white"
+        android:background="@drawable/bg_icon_circle"
+        android:contentDescription="@string/prev"/>
+
+    <!-- Tombol play/pause -->
+    <ImageView
+        android:id="@+id/np_play_pause"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:padding="10dp"
+        android:src="@drawable/ic_play"
+        android:tint="@color/white"
+        android:background="@drawable/bg_icon_circle"
+        android:contentDescription="@string/play"/>
+
+    <!-- Tombol next -->
+    <ImageView
+        android:id="@+id/np_next"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:padding="9dp"
+        android:src="@drawable/ic_next"
+        android:tint="@color/white"
+        android:background="@drawable/bg_icon_circle"
+        android:contentDescription="@string/next"/>
+
+</LinearLayout>

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Header daftar lagu beranda: judul "BARU DIPUTAR" + deretan kartu horizontal.
+     Dipasang lewat ListView.addHeaderView() supaya beranda tetap satu ListView
+     (daur ulang baris tetap jalan, tidak ada section bertumpuk).
+     Kartu horizontal dipakai, bukan ListView bersarang: ListView di dalam header
+     ListView kehilangan daur ulang dan sulit diukur tingginya. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/recent_section"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingBottom="4dp">
+
+    <TextView
+        android:id="@+id/txt_recent_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/recent_played"
+        android:textColor="@color/on_surface"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="4dp"
+        android:paddingBottom="6dp"/>
+
+    <HorizontalScrollView
+        android:id="@+id/recent_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:scrollbars="none"
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp">
+
+        <LinearLayout
+            android:id="@+id/recent_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"/>
+    </HorizontalScrollView>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/song_list"
+        android:textColor="@color/on_surface"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="12dp"
+        android:paddingBottom="2dp"/>
+</LinearLayout>

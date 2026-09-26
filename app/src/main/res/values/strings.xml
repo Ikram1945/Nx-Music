@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Nx Music</string>
+    <string name="no_songs">Tidak ada lagu dintemukan</string>
+    <string name="permission_denied">Izin akses musik ditolak</string>
+    <string name="play_error">Tidak dapat memutar lagu</string>
+    <string name="no_playing">Belum ada lagu diputar</string>
+    <string name="no_playing_artist">Pilih lagu untuk mulai memutar</string>
+    <string name="music_icon">Ikon musik</string>
+
+    <string name="play">Plays</string>
+    <string name="pause">Pause</string>
+    <string name="next">Next</string>
+    <string name="prev">Prev</string>
+    <string name="shuffle">Shuffle</string>
+    <string name="repeat">Repeat</string>
+    <string name="repeat_one">Repeat One</string>
+    <string name="shuffle_off">Shuffle Off</string>
+    <string name="repeat_off">Repeat Off</string>
+    <string name="song_list">DAFTAR LAGU</string>
+    <string name="unknown_artist">Unknown Artist</string>
+    <string name="header_greeting">Selamat Mendengarkan</string>
+    <string name="queue">Antrian</string>
+    <string name="queue_empty">Antrian kosong</string>
+    <string name="queue_clear">Kosongkan Antrian</string>
+    <string name="queue_cleared">Antrian dikosongkan</string>
+    <string name="queue_removed">Dihapus dari antrian</string>
+    <string name="play_next">Putar Berikutnya</string>
+    <string name="add_to_queue">Tambah ke Antrian</string>
+    <string name="added_to_queue">Ditambahkan ke antrian</string>
+    <string name="added_to_play_next">Akan diputar setelah lagu ini</string>
+    <string name="favorite">Favorit</string>
+    <string name="add_favorite">Tambah ke Favorit</string>
+    <string name="remove_favorite">Hapus dari Favorit</string>
+    <string name="favorites_only">Hanya Favorit</string>
+    <string name="favorites_all">Semua Lagu</string>
+    <string name="filter_favorites">Tampilkan hanya lagu favorit</string>
+    <string name="open_song_list">Buka Daftar Lagu</string>
+    <string name="back">Kembali</string>
+    <string name="now_playing_label">NOW PLAYING</string>
+
+    <!-- Media notification -->
+    <string name="notification_channel_name">Pemutar Musik</string>
+    <string name="notification_channel_desc">Kontrol pemutaran musik dari notifikasi</string>
+    <string name="notification_playing_title">Harmony Melody</string>
+    <string name="notification_stop">Hentikan</string>
+
+    <!-- Search -->
+    <string name="search_hint">Cari judul atau artis…</string>
+    <string name="clear_search">Hapus pencarian</string>
+
+    <!-- Equalizer -->
+    <string name="equalizer">Equalizer</string>
+    <string name="equalizer_not_available">Equalizer tidak tersedia di perangkat ini</string>
+    <string name="eq_enable">Aktifkan Equalizer</string>
+    <string name="eq_preset">Preset</string>
+    <string name="eq_normal">Normal</string>
+    <string name="eq_off">Matikan Equalizer</string>
+
+    <!-- Audio Effects (Bass Boost, Virtualizer, Loudness Enhancer) -->
+    <string name="audio_effects">Efek Audio</string>
+    <string name="audio_effects_not_available">Efek audio tidak tersedia di perangkat ini</string>
+    <string name="fx_bass_boost">Bass Boost</string>
+    <string name="fx_virtualizer">Virtualizer (Surround)</string>
+    <string name="fx_loudness">Loudness Enhancer</string>
+    <string name="fx_strength">Kekuatan</string>
+    <string name="fx_gain">Penguatan</string>
+    <string name="fx_off">Efek Audio Mati</string>
+
+    <!-- Reverb (gema ruangan) -->
+    <string name="reverb">Reverb</string>
+    <string name="reverb_enable">Aktifkan Reverb</string>
+    <string name="reverb_preset">Preset Ruangan</string>
+    <string name="reverb_level">Intensitas Gema</string>
+    <string name="reverb_not_available">Reverb tidak tersedia di perangkat ini</string>
+    <string name="reverb_none">Tanpa Gema</string>
+    <string name="reverb_small_room">Kamar Kecil</string>
+    <string name="reverb_medium_room">Kamar Sedang</string>
+    <string name="reverb_large_room">Kamar Besar</string>
+    <string name="reverb_studio">Studio Rekaman</string>
+    <string name="reverb_concert_hall">Aula Konser</string>
+    <string name="reverb_large_hall">Aula Besar</string>
+    <string name="reverb_cathedral">Katedral</string>
+    <string name="reverb_church">Gereja</string>
+    <string name="reverb_cave">Gua</string>
+    <string name="reverb_stadium">Stadion</string>
+    <string name="reverb_plate">Plate</string>
+    <string name="reverb_custom">Kustom</string>
+
+    <!-- Sleep Timer (fitur #2) -->
+    <string name="sleep_timer">Sleep Timer</string>
+    <string name="sleep_timer_title">Sleep Timer</string>
+    <string name="sleep_timer_hint">Hentikan pemutaran secara otomatis setelah waktu tertentu.</string>
+    <string name="sleep_timer_off">Matikan</string>
+    <string name="sleep_timer_10">10 menit</string>
+    <string name="sleep_timer_15">15 menit</string>
+    <string name="sleep_timer_20">20 menit</string>
+    <string name="sleep_timer_30">30 menit</string>
+    <string name="sleep_timer_45">45 menit</string>
+    <string name="sleep_timer_60">1 jam</string>
+    <string name="sleep_timer_90">1,5 jam</string>
+    <string name="sleep_timer_120">2 jam</string>
+    <string name="sleep_timer_set">Sleep Timer diset %1$d menit</string>
+    <string name="sleep_timer_cancelled">Sleep Timer dimatikan</string>
+    <string name="sleep_timer_remaining">Sleep Timer aktif %1$d:%2$02d</string>
+
+    <!-- Widget pemutar (fitur #10) -->
+    <string name="widget_description">Kontrol pemutar musik Harmony Melody dari layar utama</string>
+    <string name="widget_no_playing">Nx Music</string>
+    <string name="widget_no_artist">Belum ada lagu</string>
+    <string name="widget_artwork">Sampul album</string>
+
+    <!-- Statistik & Riwayat Pemutaran (fitur #5) -->
+    <string name="statistics">Statistik</string>
+    <string name="statistics_title">STATISTIK</string>
+    <string name="stat_subtitle">Ringkasan aktivitas mendengarmu</string>
+    <string name="stat_total_plays">Total Putar</string>
+    <string name="stat_total_time">Waktu Mendengar</string>
+    <string name="stat_top_title">Paling Sering Diputar</string>
+    <string name="stat_history_title">Riwayat Pemutaran</string>
+    <string name="stat_empty">Belum ada data pemutaran. Putar beberapa lagu dulu, ya!</string>
+    <string name="stat_plays_count">%1$d× putar</string>
+    <string name="stat_time_minutes">%1$d mnt</string>
+    <string name="stat_time_hours">%1$d jam %2$d mnt</string>
+    <string name="stat_just_now">Baru saja</string>
+    <string name="stat_minutes_ago">%1$d mnt lalu</string>
+    <string name="stat_hours_ago">%1$d jam lalu</string>
+    <string name="stat_days_ago">%1$d hari lalu</string>
+    <string name="unknown_title">Tanpa Judul</string>
+
+    <!-- Pengaturan (fitur settings) -->
+    <string name="settings">Pengaturan</string>
+    <string name="settings_title">PENGATURAN</string>
+    <string name="settings_theme">Mode Tampilan</string>
+    <string name="settings_theme_summary">Atur mode gelap atau terang</string>
+    <string name="theme_follow_system">Ikuti Sistem</string>
+    <string name="theme_light">Terang</string>
+    <string name="theme_dark">Gelap</string>
+    <string name="settings_custom_theme">Tema Kustom</string>
+    <string name="settings_custom_theme_summary">Pilih warna tema sesuai selera</string>
+    <string name="custom_theme_default">Default (Sistem)</string>
+    <string name="custom_theme_blue">Biru</string>
+    <string name="custom_theme_green">Hijau</string>
+    <string name="custom_theme_purple">Ungu</string>
+    <string name="custom_theme_orange">Oranye</string>
+    <string name="custom_theme_red">Merah</string>
+    <string name="custom_theme_saved">Tema kustom disimpan</string>
+    <string name="settings_sort">Urutan Daftar Lagu</string>
+    <string name="settings_sort_summary">Atur cara lagu diurutkan di daftar</string>
+    <string name="sort_default">Urutan Default</string>
+    <string name="sort_title">Judul (A-Z)</string>
+    <string name="sort_artist">Artis</string>
+    <string name="sort_duration">Durasi Terpendek</string>
+    <string name="settings_history">Riwayat &amp; Statistik</string>
+    <string name="clear_history">Kosongkan Riwayat Pemutaran</string>
+    <string name="clear_history_confirm">Hapus semua statistik dan riwayat pemutaran?</string>
+    <string name="clear_history_done">Riwayat pemutaran dikosongkan</string>
+    <string name="settings_updated">Pengaturan disimpan</string>
+
+    <!-- Crossfade -->
+    <string name="crossfade">Crossfade</string>
+    <string name="crossfade_summary">Transisi halus antar lagu (3 detik). Putar musik tanpa jeda.</string>
+    <string name="crossfade_enable">Aktifkan Crossfade</string>
+    <string name="crossfade_on">Crossfade diaktifkan</string>
+    <string name="crossfade_off">Crossfade dimatikan</string>
+
+    <!-- Daftar Putar (playlist) -->
+    <string name="playlists">Daftar Putar</string>
+    <string name="playlists_title">DAFTAR PUTAR</string>
+    <string name="playlist_new">Daftar Putar Baru</string>
+    <string name="playlist_name_hint">Nama daftar putar</string>
+    <string name="playlist_empty">Belum ada daftar putar. Ketuk + untuk membuat.</string>
+    <string name="playlist_add_song">Tambah Lagu</string>
+    <string name="playlist_delete_confirm">Hapus daftar putar ini?</string>
+    <string name="playlist_delete">Hapus</string>
+    <string name="playlist_rename">Ubah Nama</string>
+    <string name="playlist_play">Putar Daftar Putar</string>
+    <string name="playlist_count_song">%1$d lagu</string>
+    <string name="playlist_choose">Pilih daftar putar</string>
+
+    <!-- Folder (daftar putar dari folder perangkat) -->
+    <string name="folders">Folder</string>
+    <string name="folders_title">FOLDER</string>
+    <string name="folder_empty">Tidak ada folder musik ditemukan.</string>
+    <string name="folder_count_song">%1$d lagu</string>
+    <string name="folder_path">%1$s</string>
+    <string name="loading">Memuat…</string>
+
+    <!-- Baru diputar (recent played) -->
+    <string name="recent_played">BARU DIPUTAR</string>
+
+    <!-- Bottom navigation -->
+    <string name="home">Ikram</string>
+    <string name="library">Perpustakaan</string>
+    <string name="open_library">Buka Perpustakaan</string>
+    <string name="open_playlists">Buka Daftar Putar</string>
+
+    <!-- Kartu info di PlayerActivity -->
+    <string name="info_title">Total lagu</string>
+
+    <!-- Sapaan & penyemangat di PlayerActivity -->
+    <string name="greeting_default">Selamat datang, Ikram</string>
+    <string name="greeting_morning">Selamat pagi, Ikram</string>
+    <string name="greeting_noon">Selamat siang, Ikram</string>
+    <string name="greeting_evening">Selamat sore, Ikram</string>
+    <string name="greeting_night">Selamat malam, Ikram</string>
+    <string name="motivation_1">Semangat, Ikram! Hari ini pasti bisa.</string>
+    <string name="motivation_2">Musik terbaik untuk kerja terbaik.</string>
+    <string name="motivation_3">Sedikit demi sedikit, lama-lama jadi bukit.</string>
+    <string name="motivation_4">Kamu lebih kuat dari yang kamu kira.</string>
+    <string name="motivation_5">Jangan menyerah, hasilnya hampir terlihat.</string>
+</resources>

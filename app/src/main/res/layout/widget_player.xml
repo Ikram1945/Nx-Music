@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Layout widget pemutar musik Harmony Melody (fitur #10).
+     Hanya memakai view yang didukung RemoteViews: LinearLayout/RelativeLayout/
+     FrameLayout/ImageView/ImageButton/TextView. Id dipakai di MusicWidgetProvider. -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:background="@drawable/bg_widget"
+    android:gravity="center_vertical"
+    android:paddingStart="12dp"
+    android:paddingEnd="8dp"
+    android:paddingTop="8dp"
+    android:paddingBottom="8dp">
+
+    <!-- Artwork album (fallback ikon musik) -->
+    <ImageView
+        android:id="@+id/w_artwork"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="12dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_music_note"
+        android:contentDescription="@string/widget_artwork"/>
+
+    <!-- Judul & artis -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/w_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/widget_no_playing"
+            android:textColor="#FFFFFFFF"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end"/>
+
+        <TextView
+            android:id="@+id/w_artist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="@string/widget_no_artist"
+            android:textColor="#CCFFFFFF"
+            android:textSize="12sp"
+            android:maxLines="1"
+            android:ellipsize="end"/>
+    </LinearLayout>
+
+    <!-- Kontrol: prev, play/pause, next -->
+    <ImageButton
+        android:id="@+id/w_prev"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_prev"
+        android:tint="#FFFFFFFF"
+        android:contentDescription="@string/prev"/>
+
+    <ImageButton
+        android:id="@+id/w_play_pause"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_play"
+        android:tint="#FFFFFFFF"
+        android:contentDescription="@string/play"/>
+
+    <ImageButton
+        android:id="@+id/w_next"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="?android:attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_next"
+        android:tint="#FFFFFFFF"
+        android:contentDescription="@string/next"/>
+</LinearLayout>

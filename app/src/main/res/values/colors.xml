@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- ===== Material 3 Expressive palette (tema terang) ===== -->
+    <color name="primary">#5B4BC4</color>
+    <color name="primary_dark">#4A3BA8</color>
+    <color name="on_primary">#FFFFFFFF</color>
+    <color name="primary_container">#E6DFFF</color>
+    <color name="on_primary_container">#1F0F66</color>
+
+    <color name="secondary">#635B70</color>
+    <color name="on_secondary">#FFFFFFFF</color>
+    <color name="secondary_container">#EADEF8</color>
+    <color name="on_secondary_container">#1E1828</color>
+
+    <color name="tertiary">#7E5260</color>
+    <color name="on_tertiary">#FFFFFFFF</color>
+    <color name="tertiary_container">#FFD9E2</color>
+    <color name="on_tertiary_container">#31111D</color>
+
+    <!-- Warna dasar (tema terang) -->
+    <color name="background">#FDF8FF</color>
+    <color name="on_background">#1D1B20</color>
+    <color name="surface">#FDF8FF</color>
+    <color name="on_surface">#1D1B20</color>
+    <color name="surface_variant">#E6E0EC</color>
+    <color name="on_surface_variant">#49454F</color>
+    <color name="surface_container_low">#F7F2FA</color>
+    <color name="surface_container">#F3EDF7</color>
+    <color name="surface_container_high">#EDE7F1</color>
+    <color name="surface_container_highest">#E6E0EC</color>
+
+    <color name="outline">#7A757F</color>
+    <color name="outline_variant">#CAC4D0</color>
+    <color name="divider">#E6E0EC</color>
+
+    <color name="error">#B3261E</color>
+    <color name="on_error">#FFFFFF</color>
+
+    <!-- Warna dasar / status -->
+    <color name="white">#FFFFFFFF</color>
+    <color name="black">#FF000000</color>
+    <color name="transparent">#00000000</color>
+
+    <!-- Alias untuk kompatibilitas kode & drawable lama -->
+    <color name="surface_bg">#FDF8FF</color>
+    <color name="card_bg">#FFFFFF</color>
+    <color name="text_main">#1D1B20</color>
+    <color name="text_muted">#49454F</color>
+    <color name="accent_soft">#F3EDF7</color>
+    <color name="primary_gradient_end">#7C6BF0</color>
+
+    <!-- Warna tetap untuk baris pilihan pengaturan.
+         Sengaja TIDAK punya pasangan di values-night: radio button dan
+         latarnya harus selalu sama agar tetap terlihat, tidak ikut tema. -->
+    <color name="setting_radio_fixed">#212121</color>
+    <color name="setting_option_bg">#F2F2F2</color>
+    <color name="setting_option_bg_selected">#DEDEDE</color>
+    <color name="setting_option_border">#9E9E9E</color>
+    <color name="setting_option_text_fixed">#212121</color>
+
+    <!-- Warna ikon launcher -->
+    <color name="ic_launcher_background">#5B4BC4</color>
+</resources>

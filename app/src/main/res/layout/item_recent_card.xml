@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Satu kartu lagu pada deretan "BARU DIPUTAR" di beranda. -->
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="120dp"
+    android:layout_height="wrap_content"
+    android:layout_marginStart="4dp"
+    android:layout_marginEnd="4dp"
+    app:cardBackgroundColor="@color/card_bg"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="0dp"
+    app:strokeColor="@color/divider"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp"
+        android:background="?attr/selectableItemBackground">
+
+        <ImageView
+            android:id="@+id/recent_art"
+            android:layout_width="104dp"
+            android:layout_height="104dp"
+            android:background="@drawable/bg_artwork_gradient"
+            android:clipToOutline="true"
+            android:contentDescription="@string/music_icon"
+            android:padding="30dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_music_note"
+            android:tint="@color/white"/>
+
+        <TextView
+            android:id="@+id/recent_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/on_surface"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:maxLines="1"
+            android:ellipsize="end"/>
+
+        <TextView
+            android:id="@+id/recent_artist"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/on_surface_variant"
+            android:textSize="11sp"
+            android:maxLines="1"
+            android:ellipsize="end"/>
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

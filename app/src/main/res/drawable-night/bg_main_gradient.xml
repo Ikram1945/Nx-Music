@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Latar gelap Material 3 Expressive: gradasi gelap ungu -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <gradient
+        android:startColor="#FF141218"
+        android:centerColor="#FF17151C"
+        android:endColor="#FF1E1828"
+        android:angle="315"/>
+</shape>

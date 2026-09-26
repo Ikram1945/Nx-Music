@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Warna teks baris pilihan pengaturan. Warna tetap (tidak ikut tema) agar
+     selalu kontras dengan latar bg_setting_option yang juga tetap. -->
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_checked="true" android:color="@color/setting_option_text_fixed"/>
+    <item android:color="@color/setting_option_text_fixed"/>
+</selector>
