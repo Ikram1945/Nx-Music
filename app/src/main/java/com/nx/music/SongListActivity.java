@@ -133,7 +133,8 @@ public class SongListActivity extends AppCompatActivity {
 
     /** Mencari lagu secara live sesuai teks, plus tombol hapus teks. */
     private void setupSearch() {
-        searchInput.addTextChangedListener(new SearchTextWatcher(adapter, btnClearSearch));
+        searchInput.addTextChangedListener(new SearchTextWatcher(btnClearSearch,
+                query -> adapter.filter(query)));
 
         btnClearSearch.setOnClickListener(v -> {
             searchInput.setText("");

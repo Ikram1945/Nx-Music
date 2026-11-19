@@ -13,7 +13,7 @@ import org.json.JSONObject
  *
  * Data per lagu disimpan sebagai JSONObject keyed by path:
  *   { title, artist, plays, last } (last = epoch ms terakhir diputar)
- * Riwayat disimpan sebagai JSONArray of path, terbaru di depan.
+ * Riwayat disimpan sebagai JSONArray of path, terbaru di depan. ku
  */
 class PlaybackStats private constructor(context: Context) {
 

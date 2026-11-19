@@ -25,7 +25,7 @@ isApplication = true
 dexMode = "auto"
 parallelDex = "false"
 javaExec = "inprocess"
-kotlinExec = "forkworker"
+kotlinExec = "inprocess"
 kotlinWorkerHeapMb = 0
 
 dexMergeForks = 0

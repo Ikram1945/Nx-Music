@@ -1,0 +1,326 @@
+package com.nx.music
+
+import android.content.Intent
+import android.content.res.ColorStateList
+import android.graphics.Typeface
+import android.os.Bundle
+import android.text.TextUtils
+import android.util.TypedValue
+import android.view.Gravity
+import android.view.View
+import android.view.ViewGroup
+import android.widget.FrameLayout
+import android.widget.ImageButton
+import android.widget.LinearLayout
+import android.widget.TextView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+
+/**
+ * Layar statistik & riwayat pemutaran (fitur #5).
+ * Menampilkan total putar, total waktu mendengarkan, lagu paling sering diputar,
+ * dan riwayat lagu yang baru diputar. Data dibaca dari [PlaybackStats].
+ */
+class StatisticsActivity : AppCompatActivity() {
+
+    private lateinit var txtTotalPlays: TextView
+    private lateinit var txtTotalTime: TextView
+    private lateinit var txtTopHeader: TextView
+    private lateinit var txtHistoryHeader: TextView
+    private lateinit var topContainer: LinearLayout
+    private lateinit var historyContainer: LinearLayout
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_statistics)
+
+        ThemeHelper.applyThemeToActivity(this)
+
+        txtTotalPlays = findViewById(R.id.txt_total_plays)
+        txtTotalTime = findViewById(R.id.txt_total_time)
+        txtTopHeader = findViewById(R.id.txt_top_header)
+        txtHistoryHeader = findViewById(R.id.txt_history_header)
+        topContainer = findViewById(R.id.top_container)
+        historyContainer = findViewById(R.id.history_container)
+
+        val btnBack = findViewById<ImageButton>(R.id.btn_back)
+        btnBack.setOnClickListener { finish() }
+
+        populate()
+    }
+
+    private fun populate() {
+        val stats = PlaybackStats.getInstance(this)
+
+        txtTotalPlays.text = stats.totalPlays.toString()
+        txtTotalTime.text = formatDuration(stats.totalListeningTimeSec)
+
+        val top = stats.getTopPlayed()
+        val history = stats.getHistory()
+
+        // Batasi tampilan agar layar tak jadi scroll panjang tak berujung.
+        val topCount = minOf(top.size, 5)
+        val historyCount = minOf(history.size, 10)
+
+        if (topCount == 0) {
+            txtTopHeader.visibility = View.GONE
+            addEmptyRow(topContainer)
+        } else {
+            // Bar chart: 5 lagu teratas sebagai bar horizontal proporsional.
+            var maxPlays = 1
+            for (i in 0 until topCount) {
+                maxPlays = maxOf(maxPlays, top[i].plays)
+            }
+            for (i in 0 until topCount) {
+                addTopChartRow(topContainer, top[i], top[i].plays, maxPlays, i)
+            }
+        }
+
+        if (historyCount == 0) {
+            txtHistoryHeader.visibility = View.GONE
+            addEmptyRow(historyContainer)
+        } else {
+            for (i in 0 until historyCount) {
+                addHistoryRow(historyContainer, i, history[i])
+            }
+        }
+    }
+
+    /** Baris bar chart untuk satu lagu: peringkat + judul + bar proporsional. */
+    private fun addTopChartRow(
+        parent: LinearLayout,
+        entry: PlaybackHistoryEntry,
+        plays: Int,
+        maxPlays: Int,
+        rank: Int,
+    ) {
+        val row = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            setPadding(dp(16), dp(8), dp(16), dp(8))
+        }
+
+        // Nomor peringkat dalam lingkaran berwarna tema.
+        val rankTv = TextView(this).apply {
+            text = (rank + 1).toString()
+            setTextColor(ContextCompat.getColor(this@StatisticsActivity, R.color.white))
+            textSize = 13f
+            typeface = Typeface.DEFAULT_BOLD
+            gravity = Gravity.CENTER
+            setBackgroundResource(R.drawable.bg_icon_circle)
+        }
+        row.addView(rankTv, LinearLayout.LayoutParams(dp(26), dp(26)).apply {
+            setMargins(0, 0, dp(12), 0)
+        })
+
+        val col = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        }
+
+        // Baris atas: judul + jumlah putar
+        val head = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+        }
+
+        val titleTv = TextView(this).apply {
+            text = if (entry.title.isEmpty()) getString(R.string.unknown_title) else entry.title
+            setTextColor(ContextCompat.getColor(this@StatisticsActivity, R.color.on_surface))
+            textSize = 14f
+            typeface = Typeface.DEFAULT_BOLD
+            maxLines = 1
+            ellipsize = TextUtils.TruncateAt.END
+        }
+        head.addView(titleTv, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+
+        val countTv = TextView(this).apply {
+            text = getString(R.string.stat_plays_count, plays)
+            setTextColor(ContextCompat.getColor(this@StatisticsActivity, R.color.primary))
+            textSize = 13f
+            typeface = Typeface.DEFAULT_BOLD
+        }
+        head.addView(
+            countTv,
+            LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+            ),
+        )
+        col.addView(head)
+
+        // Bar: FrameLayout berisi track (latar penuh) + fill (bar kiri proporsional).
+        val barArea = FrameLayout(this).apply {
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(16)).apply {
+                setMargins(0, dp(6), 0, 0)
+            }
+        }
+        col.addView(barArea)
+
+        val track = View(this).apply {
+            setBackgroundResource(R.drawable.bg_bar_track)
+        }
+        barArea.addView(
+            track,
+            FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT,
+            ),
+        )
+
+        val fill = View(this).apply {
+            setBackgroundResource(R.drawable.bg_bar_fill)
+            // Tiga teratas diberi warna lebih tegas agar mudah dibedakan.
+            backgroundTintList = ColorStateList.valueOf(
+                ContextCompat.getColor(
+                    this@StatisticsActivity,
+                    if (rank < 3) R.color.primary else R.color.primary_gradient_end,
+                ),
+            )
+        }
+        barArea.addView(
+            fill,
+            FrameLayout.LayoutParams(dp(6), FrameLayout.LayoutParams.MATCH_PARENT, Gravity.START),
+        )
+
+        // Lebar bar dihitung setelah area terukur. Sebelumnya dipakai
+        // widthPixels dikurangi padding tebakan, dan itu membuat bar meluber
+        // keluar kartu karena padding container tidak ikut diperhitungkan.
+        barArea.post {
+            val available = barArea.width
+            if (available <= 0) {
+                return@post
+            }
+            var target = (plays.toFloat() / maxPlays.toFloat() * available).toInt()
+            if (target < dp(6)) {
+                target = dp(6)
+            }
+            val lp = fill.layoutParams
+            lp.width = target
+            fill.layoutParams = lp
+        }
+
+        row.addView(col)
+        parent.addView(row)
+        row.setOnClickListener { playSong(entry) }
+    }
+
+    private fun addHistoryRow(parent: LinearLayout, index: Int, entry: PlaybackHistoryEntry) {
+        val row = makeRow(index, entry.title, entry.artist, formatRelativeTime(entry.lastPlayedAt))
+        row.setOnClickListener { playSong(entry) }
+        parent.addView(row)
+    }
+
+    private fun makeRow(index: Int, title: String?, subtitle: String?, meta: String): View {
+        val row = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            setPadding(dp(16), dp(10), dp(16), dp(10))
+            // Ripple bawaan tema (bukan list_selector_background) agar efek ketuk
+            // konsisten dengan daftar lain di aplikasi ini.
+            val tv = TypedValue()
+            if (theme.resolveAttribute(android.R.attr.selectableItemBackground, tv, true)) {
+                setBackgroundResource(tv.resourceId)
+            }
+        }
+
+        val idx = TextView(this).apply {
+            text = (index + 1).toString()
+            setTextColor(ContextCompat.getColor(this@StatisticsActivity, R.color.white))
+            textSize = 10f
+            typeface = Typeface.DEFAULT_BOLD
+            gravity = Gravity.CENTER
+            setBackgroundResource(R.drawable.bg_icon_circle)
+        }
+        row.addView(idx, LinearLayout.LayoutParams(dp(24), dp(24)).apply {
+            setMargins(0, 0, dp(12), 0)
+        })
+
+        val texts = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        }
+
+        val titleTv = TextView(this).apply {
+            text = if (title.isNullOrEmpty()) getString(R.string.unknown_title) else title
+            setTextColor(ContextCompat.getColor(this@StatisticsActivity, R.color.on_surface))
+            textSize = 15f
+            maxLines = 1
+            ellipsize = TextUtils.TruncateAt.END
+        }
+        texts.addView(titleTv)
+
+        val subtitleTv = TextView(this).apply {
+            text = if (subtitle.isNullOrEmpty()) getString(R.string.unknown_artist) else subtitle
+            setTextColor(ContextCompat.getColor(this@StatisticsActivity, R.color.on_surface_variant))
+            textSize = 12f
+            maxLines = 1
+            ellipsize = TextUtils.TruncateAt.END
+        }
+        texts.addView(subtitleTv)
+
+        row.addView(texts)
+
+        val metaTv = TextView(this).apply {
+            text = meta
+            setTextColor(ContextCompat.getColor(this@StatisticsActivity, R.color.primary))
+            textSize = 13f
+        }
+        row.addView(metaTv)
+
+        return row
+    }
+
+    private fun addEmptyRow(parent: LinearLayout) {
+        val empty = TextView(this).apply {
+            setText(R.string.stat_empty)
+            setTextColor(ContextCompat.getColor(this@StatisticsActivity, R.color.on_surface_variant))
+            textSize = 14f
+            gravity = Gravity.CENTER
+            setPadding(0, dp(24), 0, dp(24))
+        }
+        parent.addView(empty)
+    }
+
+    private fun playSong(entry: PlaybackHistoryEntry) {
+        // Cari lagu di playlist berdasarkan path, lalu putar.
+        val playlist = PlaybackController.getInstance()?.playlist ?: return
+        for (i in playlist.indices) {
+            val s = playlist[i]
+            if (s.path == entry.path) {
+                PlaybackController.getInstance().playAt(i)
+                startActivity(Intent(this, PlayerActivity::class.java))
+                finish()
+                return
+            }
+        }
+    }
+
+    private fun formatDuration(totalSec: Long): String {
+        val hours = totalSec / 3600L
+        val minutes = (totalSec % 3600L) / 60L
+        return if (hours > 0) {
+            getString(R.string.stat_time_hours, hours, minutes)
+        } else {
+            getString(R.string.stat_time_minutes, minutes)
+        }
+    }
+
+    private fun formatRelativeTime(epochMs: Long): String {
+        val diff = System.currentTimeMillis() - epochMs
+        val minutes = diff / 60000L
+        if (minutes < 1) {
+            return getString(R.string.stat_just_now)
+        } else if (minutes < 60) {
+            return getString(R.string.stat_minutes_ago, minutes)
+        }
+        val hours = minutes / 60L
+        if (hours < 24) {
+            return getString(R.string.stat_hours_ago, hours)
+        }
+        val days = hours / 24L
+        return getString(R.string.stat_days_ago, days)
+    }
+
+    private fun dp(value: Int): Int = (value * resources.displayMetrics.density).toInt()
+}

@@ -31,6 +31,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.chip.Chip;
+import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.android.material.materialswitch.MaterialSwitch;
 import com.google.android.material.slider.Slider;
@@ -100,6 +102,14 @@ public class PlayerActivity extends AppCompatActivity implements PlaybackCallbac
 
     private EqualizerHelper eqHelper;
     private AudioEffectsHelper audioEffectsHelper;
+
+    /** Level dasar band low-end (sebelum boost bass EQ). -1 = belum diambil. */
+    private final java.util.Map<Integer,Integer> bassBaseLevels = new java.util.HashMap<>();
+
+    /** Indeks preset bass cepat terpilih (lihat BASS_PRESETS). */
+    private int bassPresetIndex = 0;
+    /** Slider virtualizer mengikuti slider bass (bass kencang <-> bass semu seimbang). */
+    private boolean bassVirtualizerLock = true;
 
     /** Nama tiap preset reverb (urutan sinkron dengan AudioEffectsHelper.REVERB_PRESETS) + "Kustom". */
     private static final int[] REVERB_PRESET_LABELS = {
@@ -218,9 +228,117 @@ public class PlayerActivity extends AppCompatActivity implements PlaybackCallbac
                 audioEffectsHelper = AudioEffectsHelper.getInstance(this);
             }
             audioEffectsHelper.attach(playback != null ? playback.getAudioSessionId() : -1);
+            // Terapkan boost bass EQ bila bass sudah aktif dari sesi sebelumnya.
+            applyBassEqBoost();
         } catch (Exception ignored) {
             // Efek audio tidak tersedia; abaikan.
         }
+    }
+
+    /**
+     * Menambah bass ekstra via band frekuensi rendah Equalizer, di atas batas
+     * BassBoost (yang mentok di 1000). Menaikkan band <=250 Hz saat bass aktif.
+     * Gain dibatasi persentase rentang level perangkat agar hindari clipping.
+     */
+    private void applyBassEqBoost() {
+        if (eqHelper == null || !eqHelper.isAvailable()) {
+            return;
+        }
+        int bands = eqHelper.getBandCount();
+        int maxLevel = eqHelper.getMaxLevel();
+        int minLevel = eqHelper.getMinLevel();
+        int span = maxLevel - minLevel;
+        boolean active = audioEffectsHelper != null && audioEffectsHelper.isBassEnabled();
+        float ratio = active
+                ? audioEffectsHelper.getBassStrength() / (float) audioEffectsHelper.getBassMax()
+                : 0f;
+
+        // Virtualizer mengikuti bass: makin kuat bass, makin lebar stereo.
+        if (bassVirtualizerLock && audioEffectsHelper != null) {
+            audioEffectsHelper.setVirtualizerEnabled(active && ratio > 0f);
+            audioEffectsHelper.setVirtualizerStrength(Math.round(1000f * ratio));
+        }
+
+        for (int b = 0; b < bands; b++) {
+            int freq = eqHelper.getBandCenterFrequency(b);
+            if (freq > 250) {
+                continue;
+            }
+            Integer base = bassBaseLevels.get(b);
+            if (base == null) {
+                base = eqHelper.getBandLevel(b);
+                bassBaseLevels.put(b, base);
+            }
+            // Sub-bass (<=60 Hz) dapat gain ekstra agar bass terasa "dalam".
+            float factor = freq <= 60 ? 0.45f : 0.35f;
+            int extra = Math.round(span * factor * ratio);
+            int target = Math.min(maxLevel, Math.max(minLevel, base + extra));
+            eqHelper.setBandLevel(b, target);
+        }
+    }
+
+    /** Level kekuatan bass untuk tiap preset cepat. */
+    private static final int[] BASS_PRESETS = {0, 450, 750, 1000};
+
+    /** Terapkan preset bass cepat: set strength BassBoost + boost EQ, lalu sinkronkan UI. */
+    private void applyBassPreset(int index) {
+        if (audioEffectsHelper == null || index < 0 || index >= BASS_PRESETS.length) {
+            return;
+        }
+        bassPresetIndex = index;
+        audioEffectsHelper.setBassStrength(BASS_PRESETS[index]);
+        audioEffectsHelper.setBassEnabled(BASS_PRESETS[index] > 0);
+        applyBassEqBoost();
+    }
+
+    /** Baris chip preset bass cepat + saklar lock virtualizer. */
+    private void addBassPresetRow(LinearLayout root) {
+        MaterialCardView card = dialogCard(R.string.fx_bass_preset);
+        LinearLayout body = cardBody(card);
+        root.addView(card);
+
+        if (!audioEffectsHelper.isBassAvailable()) {
+            TextView unavailable = new TextView(this);
+            unavailable.setText(R.string.audio_effects_not_available);
+            unavailable.setTextAppearance(com.google.android.material.R.style.TextAppearance_Material3_BodySmall);
+            unavailable.setTextColor(ContextCompat.getColor(this, R.color.on_surface_variant));
+            body.addView(unavailable);
+            return;
+        }
+
+        final int[] labels = {R.string.bass_preset_off, R.string.bass_preset_normal,
+                R.string.bass_preset_plus, R.string.bass_preset_extreme};
+        // Pilih chip terdekat dengan strength tersimpan.
+        bassPresetIndex = 0;
+        int cur = audioEffectsHelper.getBassStrength();
+        for (int i = 0; i < BASS_PRESETS.length; i++) {
+            if (Math.abs(BASS_PRESETS[i] - cur) < Math.abs(BASS_PRESETS[bassPresetIndex] - cur)) {
+                bassPresetIndex = i;
+            }
+        }
+
+        final ChipGroup group = new ChipGroup(this);
+        group.setSingleSelection(true);
+        group.setSelectionRequired(true);
+        for (int i = 0; i < labels.length; i++) {
+            final int idx = i;
+            Chip chip = new Chip(this);
+            chip.setText(labels[i]);
+            chip.setCheckable(true);
+            chip.setChecked(i == bassPresetIndex);
+            chip.setOnClickListener(v -> applyBassPreset(idx));
+            group.addView(chip);
+        }
+        body.addView(group);
+
+        MaterialSwitch lockSwitch = new MaterialSwitch(this);
+        lockSwitch.setText(R.string.fx_bass_virtualizer_lock);
+        lockSwitch.setChecked(bassVirtualizerLock);
+        lockSwitch.setOnCheckedChangeListener((b, checked) -> {
+            bassVirtualizerLock = checked;
+            applyBassEqBoost();
+        });
+        body.addView(lockSwitch);
     }
 
     @Override
@@ -362,7 +480,7 @@ public class PlayerActivity extends AppCompatActivity implements PlaybackCallbac
     }
 
     private void setupSeekBar() {
-        seekBar.setOnSeekBarChangeListener(new SeekBarListener(playback));
+        seekBar.setOnSeekBarChangeListener(new SeekBarListener(progress -> playback.seekTo(progress)));
     }
 
     private void setupButtons() {
@@ -793,7 +911,8 @@ public class PlayerActivity extends AppCompatActivity implements PlaybackCallbac
             row.addView(sb, sbLp);
 
             final int band = b;
-            sb.setOnSeekBarChangeListener(new EqualizerBandListener(eqHelper, band, minLevel));
+            sb.setOnSeekBarChangeListener(new EqualizerBandListener(band, minLevel,
+                    (bandIndex, level) -> { eqHelper.setBandLevel(bandIndex, level); return 0; }));
             bandSeekBars.add(sb);
 
             LinearLayout.LayoutParams rowLp = new LinearLayout.LayoutParams(
@@ -804,7 +923,9 @@ public class PlayerActivity extends AppCompatActivity implements PlaybackCallbac
 
         // Saat preset dipilih, perbarui slider agar sesuai level preset.
         presetSpinner.setOnItemSelectedListener(
-                new PresetSpinnerListener(eqHelper, presets, minLevel, bandSeekBars));
+                new PresetSpinnerListener(presets, minLevel, bandSeekBars,
+                        idx -> eqHelper.usePreset(idx),
+                        bandIdx -> eqHelper.getBandLevel(bandIdx)));
 
         // Saat saklar diubah, aktifkan/nonaktifkan equalizer.
         enableSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -835,23 +956,34 @@ public class PlayerActivity extends AppCompatActivity implements PlaybackCallbac
         root.setOrientation(LinearLayout.VERTICAL);
         root.setPadding(dp(4), dp(4), dp(4), dp(4));
 
+        addBassPresetRow(root);
+
         addEffectsSliderRow(root, R.string.fx_bass_boost,
                 audioEffectsHelper.isBassAvailable(),
                 audioEffectsHelper.isBassEnabled(),
                 audioEffectsHelper.getBassStrength(),
                 audioEffectsHelper.getBassMax(),
-                enable -> audioEffectsHelper.setBassEnabled(enable),
-                value -> audioEffectsHelper.setBassStrength(value),
+                enable -> {
+                    audioEffectsHelper.setBassEnabled(enable);
+                    applyBassEqBoost();
+                },
+                value -> {
+                    audioEffectsHelper.setBassStrength(value);
+                    applyBassEqBoost();
+                },
                 false);
 
-        addEffectsSliderRow(root, R.string.fx_virtualizer,
-                audioEffectsHelper.isVirtualizerAvailable(),
-                audioEffectsHelper.isVirtualizerEnabled(),
-                audioEffectsHelper.getVirtualizerStrength(),
-                audioEffectsHelper.getVirtualizerMax(),
-                enable -> audioEffectsHelper.setVirtualizerEnabled(enable),
-                value -> audioEffectsHelper.setVirtualizerStrength(value),
-                false);
+        // Bila lock virtualizer aktif, slider ini dikendalikan otomatis oleh bass.
+        if (!bassVirtualizerLock) {
+            addEffectsSliderRow(root, R.string.fx_virtualizer,
+                    audioEffectsHelper.isVirtualizerAvailable(),
+                    audioEffectsHelper.isVirtualizerEnabled(),
+                    audioEffectsHelper.getVirtualizerStrength(),
+                    audioEffectsHelper.getVirtualizerMax(),
+                    enable -> audioEffectsHelper.setVirtualizerEnabled(enable),
+                    value -> audioEffectsHelper.setVirtualizerStrength(value),
+                    false);
+        }
 
         addEffectsSliderRow(root, R.string.fx_loudness,
                 audioEffectsHelper.isLoudnessAvailable(),

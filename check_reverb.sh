@@ -8,10 +8,9 @@ STUB="${NX_STUB:-/root/.cache/nxcheck/iso/src}"
 OUT="${NX_OUT:-/root/.cache/nxcheck/isoout}"
 SRC=app/src/main/java/com/nx/music
 javac -nowarn -d "$OUT" -cp "$ANDROID_JAR" $(find "$STUB" -name '*.java') \
-  "$SRC/AudioEffectsHelper.java" "$SRC/EffectsSliderListener.java" \
-  "$SRC/ArtworkGestureListener.java" "$SRC/SeekBarListener.java" \
-  "$SRC/EqualizerHelper.java" "$SRC/EqualizerBandListener.java" \
-  "$SRC/PresetSpinnerListener.java" "$SRC/PlayerActivity.java"
+  "$SRC/AudioEffectsHelper.java" \
+  "$SRC/ArtworkGestureListener.java" \
+  "$SRC/EqualizerHelper.java" "$SRC/PlayerActivity.java"
 cat > /tmp/RevCheck.java <<'JAVA'
 import com.nx.music.AudioEffectsHelper;
 public class RevCheck {
