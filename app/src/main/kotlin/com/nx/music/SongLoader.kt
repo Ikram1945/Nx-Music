@@ -94,6 +94,127 @@ object SongLoader {
         return result
     }
 
+    /** Satu album di perangkat. [artist] = artis lagu pertama di album itu. */
+    class Album(
+        @JvmField val name: String,
+        @JvmField val artist: String,
+        @JvmField val count: Int,
+    )
+
+    /** Satu artis di perangkat, dengan jumlah lagu & albumnya. */
+    class Artist(
+        @JvmField val name: String,
+        @JvmField val songCount: Int,
+        @JvmField val albumCount: Int,
+    )
+
+    /** Lagu + nama album mentah dari MediaStore (model [Song] tak menyimpan album). */
+    private class SongWithAlbum(val song: Song, val album: String?)
+
+    /**
+     * Query MediaStore dengan kolom ALBUM. Terpisah dari [loadSongs] agar
+     * model Song & semua pemanggil lamanya tidak perlu berubah.
+     */
+    private fun loadSongsWithAlbum(resolver: ContentResolver): List<SongWithAlbum> {
+        val result = ArrayList<SongWithAlbum>()
+        val uri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI
+        val projection = arrayOf(
+            MediaStore.Audio.Media.TITLE,
+            MediaStore.Audio.Media.ARTIST,
+            MediaStore.Audio.Media.DATA,
+            MediaStore.Audio.Media.DURATION,
+            MediaStore.Audio.Media.ALBUM,
+        )
+        val selection = MediaStore.Audio.Media.IS_MUSIC + " != 0"
+        resolver.query(uri, projection, selection, null, null)?.use { cursor ->
+            while (cursor.moveToNext()) {
+                val song = Song(
+                    cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST)),
+                    cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)),
+                    cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)),
+                )
+                val album = cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM))
+                result.add(SongWithAlbum(song, album))
+            }
+        }
+        return result
+    }
+
+    /** Kunci pengelompokan: trim + huruf kecil; kosong/null -> "<unknown>" (konvensi MediaStore). */
+    private fun groupKey(value: String?): String =
+        value?.trim()?.lowercase()?.ifEmpty { "<unknown>" } ?: "<unknown>"
+
+    /** Nama tampilan pengelompokan: nilai asli (trim), atau "<unknown>" bila kosong. */
+    private fun displayName(value: String?): String =
+        value?.trim()?.ifEmpty { "<unknown>" } ?: "<unknown>"
+
+    /**
+     * Mengelompokkan lagu per album (kolom ALBUM MediaStore). Dipakai menu
+     * Album. Urut: nama album A-Z. Album kompilasi memakai artis lagu
+     * pertamanya sebagai artis album.
+     */
+    @JvmStatic
+    fun loadAlbums(context: Context): MutableList<Album> {
+        val groups = LinkedHashMap<String, Album>()
+        val counts = HashMap<String, Int>()
+        for (item in loadSongsWithAlbum(context.contentResolver)) {
+            val key = groupKey(item.album)
+            if (!groups.containsKey(key)) {
+                groups[key] = Album(displayName(item.album), displayName(item.song.artist), 0)
+            }
+            counts[key] = (counts[key] ?: 0) + 1
+        }
+        return groups.map { (key, album) -> Album(album.name, album.artist, counts[key] ?: 0) }
+            .sortedBy { it.name.lowercase() }
+            .toMutableList()
+    }
+
+    /** Lagu-lagu di dalam satu album (nama album cocok, tak peka huruf besar/kecil). Urut judul. */
+    @JvmStatic
+    fun loadSongsInAlbum(context: Context, albumName: String): MutableList<Song> {
+        val key = groupKey(albumName)
+        val result = loadSongsWithAlbum(context.contentResolver)
+            .filter { groupKey(it.album) == key }
+            .map { it.song }
+            .toMutableList()
+        result.sortWith(BY_TITLE)
+        return result
+    }
+
+    /**
+     * Mengelompokkan lagu per artis (kolom ARTIST, sudah ada di [Song]).
+     * Jumlah album per artis dihitung dari kolom ALBUM. Urut: nama A-Z.
+     */
+    @JvmStatic
+    fun loadArtists(context: Context): MutableList<Artist> {
+        val names = LinkedHashMap<String, String>()
+        val songCounts = HashMap<String, Int>()
+        val albumKeys = HashMap<String, MutableSet<String>>()
+        for (item in loadSongsWithAlbum(context.contentResolver)) {
+            val artistKey = groupKey(item.song.artist)
+            if (!names.containsKey(artistKey)) {
+                names[artistKey] = displayName(item.song.artist)
+            }
+            songCounts[artistKey] = (songCounts[artistKey] ?: 0) + 1
+            albumKeys.getOrPut(artistKey) { mutableSetOf() }.add(groupKey(item.album))
+        }
+        return names.map { (key, name) ->
+            Artist(name, songCounts[key] ?: 0, albumKeys[key]?.size ?: 0)
+        }.sortedBy { it.name.lowercase() }.toMutableList()
+    }
+
+    /** Lagu-lagu dari satu artis (nama cocok, tak peka huruf besar/kecil). Urut judul. */
+    @JvmStatic
+    fun loadSongsByArtist(context: Context, artistName: String): MutableList<Song> {
+        val key = groupKey(artistName)
+        val result = loadSongs(context.contentResolver)
+            .filter { groupKey(it.artist) == key }
+            .toMutableList()
+        result.sortWith(BY_TITLE)
+        return result
+    }
+
     /** Folder induk dari path file, atau null jika path kosong/tak ada separator. */
     private fun parentDir(path: String?): String? {
         if (path == null) return null

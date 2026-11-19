@@ -34,6 +34,10 @@
         <activity android:name=".PlaylistDetailActivity" android:exported="false"/>
         <activity android:name=".FolderActivity" android:exported="false"/>
         <activity android:name=".FolderDetailActivity" android:exported="false"/>
+        <activity android:name=".AlbumActivity" android:exported="false"/>
+        <activity android:name=".AlbumDetailActivity" android:exported="false"/>
+        <activity android:name=".ArtistActivity" android:exported="false"/>
+        <activity android:name=".ArtistDetailActivity" android:exported="false"/>
 
         <service
             android:name=".MusicService"

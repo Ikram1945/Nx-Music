@@ -41,6 +41,7 @@ public class SongListActivity extends AppCompatActivity {
     private ImageButton btnStatistics;
     private ImageButton btnSettings;
     private ImageButton btnPlaylists;
+    private ImageButton btnAlbums;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +57,7 @@ public class SongListActivity extends AppCompatActivity {
         btnStatistics = findViewById(R.id.btn_statistics);
         btnSettings = findViewById(R.id.btn_settings);
         btnPlaylists = findViewById(R.id.btn_playlists);
+        btnAlbums = findViewById(R.id.btn_albums);
         // create() selalu memastikan service foreground aktif & mediaPlayer tersedia,
         // sehingga lagu dapat diputar walau service pernah dihentikan sistem.
         playback = PlaybackController.create(this);
@@ -71,6 +73,10 @@ public class SongListActivity extends AppCompatActivity {
 
         btnPlaylists.setOnClickListener(v ->
                 startActivity(new Intent(this, PlaylistActivity.class)));
+
+        // Album & Artis: dari Album bisa tukar ke Artis lewat tombol di header-nya.
+        btnAlbums.setOnClickListener(v ->
+                startActivity(new Intent(this, AlbumActivity.class)));
 
         setupBottomNav();
         setupList();

@@ -39,6 +39,7 @@ Memutar file audio yang tersimpan di perangkat lewat `MediaStore`, dengan dukung
 ### Pencarian & Navigasi
 - 🔍 **Pencarian live** (judul/artis) dengan tombol hapus
 - ⭐ **Favorit** — tandai lagu favorit & filter hanya favorit
+- 💿 **Album & Artis** — telusuri lagu per album / per artis (metadata MediaStore), putar satu album/artis penuh
 - 🧭 Navigasi bawah: **Beranda / Perpustakaan / Daftar Putar**
 - 🕐 **Sleep Timer** — hentikan pemutaran otomatis setelah 10–120 menit
 
@@ -63,6 +64,8 @@ Memutar file audio yang tersimpan di perangkat lewat `MediaStore`, dengan dukung
 | Perpustakaan | `SongListActivity` | Daftar lagu + pencarian + filter favorit |
 | Daftar Putar | `PlaylistActivity` | Kelola daftar putar |
 | Detail Daftar Putar | `PlaylistDetailActivity` | Isi playlist, tambah/hapus lagu, putar |
+| Album | `AlbumActivity` / `AlbumDetailActivity` | Daftar album + lagu di dalam satu album |
+| Artis | `ArtistActivity` / `ArtistDetailActivity` | Daftar artis + semua lagu dari satu artis |
 | Statistik | `StatisticsActivity` | Statistik & riwayat pemutaran |
 | Pengaturan | `SettingsActivity` | Tema, urutan lagu, hapus riwayat |
 
@@ -212,7 +215,6 @@ Bar spectrum di layar Player. Sumber data `android.media.audiofx.Visualizer`
 
 ## 🗺️ Roadmap
 
-- Navigasi per album / artis
 - Tombol Stop / hentikan di player
 - Export / import playlist (`.m3u`)
 

@@ -79,6 +79,17 @@
             android:tint="@color/white"
             android:padding="11dp"
             android:contentDescription="@string/playlists"/>
+
+        <ImageButton
+            android:id="@+id/btn_albums"
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            android:layout_marginStart="6dp"
+            android:background="@drawable/bg_icon_circle"
+            android:src="@drawable/ic_album"
+            android:tint="@color/white"
+            android:padding="11dp"
+            android:contentDescription="@string/open_albums"/>
     </LinearLayout>
 
     <!-- Kotak pencarian lagu -->

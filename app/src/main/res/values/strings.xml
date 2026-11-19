@@ -197,6 +197,18 @@
     <string name="folder_path">%1$s</string>
     <string name="loading">Memuat…</string>
 
+    <!-- Album & Artis (daftar putar dari metadata MediaStore) -->
+    <string name="albums">Album</string>
+    <string name="albums_title">ALBUM</string>
+    <string name="album_empty">Tidak ada album ditemukan.</string>
+    <string name="artists">Artis</string>
+    <string name="artists_title">ARTIS</string>
+    <string name="artist_empty">Tidak ada artis ditemukan.</string>
+    <string name="album_artist_empty">Tidak ada lagu ditemukan.</string>
+    <string name="artist_count_detail">%1$d lagu · %2$d album</string>
+    <string name="open_albums">Buka Album</string>
+    <string name="open_artists">Buka Artis</string>
+
     <!-- Baru diputar (recent played) -->
     <string name="recent_played">BARU DIPUTAR</string>
 
