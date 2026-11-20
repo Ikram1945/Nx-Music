@@ -7,7 +7,7 @@
     android:fitsSystemWindows="true"
     android:background="@drawable/bg_main_gradient">
 
-    <!-- Header -->
+    <!-- Header baris 1: tombol kembali + judul saja, biar lega -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,7 +16,7 @@
         android:paddingStart="12dp"
         android:paddingEnd="20dp"
         android:paddingTop="16dp"
-        android:paddingBottom="12dp">
+        android:paddingBottom="10dp">
 
         <ImageButton
             android:id="@+id/btn_back"
@@ -37,59 +37,152 @@
             android:textSize="22sp"
             android:textStyle="bold"
             android:paddingStart="16dp"/>
+    </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/btn_settings"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_marginEnd="6dp"
-            android:background="@drawable/bg_icon_circle"
-            android:src="@drawable/ic_settings"
-            android:tint="@color/white"
-            android:padding="11dp"
-            android:contentDescription="@string/settings"/>
+    <!-- Header baris 2: kelima ikon aksi jadi bilah pintasan berjarak rata,
+         masing-masing dengan label kecil di bawahnya -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="12dp">
 
-        <ImageButton
-            android:id="@+id/btn_statistics"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="@drawable/bg_icon_circle"
-            android:src="@drawable/ic_statistics"
-            android:tint="@color/white"
-            android:padding="11dp"
-            android:contentDescription="@string/statistics"/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
 
-        <ImageButton
-            android:id="@+id/btn_favorite_filter"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:background="@drawable/bg_icon_circle"
-            android:src="@drawable/ic_favorite_border"
-            android:tint="@color/white"
-            android:padding="11dp"
-            android:contentDescription="@string/filter_favorites"/>
+            <ImageButton
+                android:id="@+id/btn_settings"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/bg_icon_circle"
+                android:src="@drawable/ic_settings"
+                android:tint="@color/white"
+                android:padding="11dp"
+                android:contentDescription="@string/settings"/>
 
-        <ImageButton
-            android:id="@+id/btn_playlists"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_marginStart="6dp"
-            android:background="@drawable/bg_icon_circle"
-            android:src="@drawable/ic_queue"
-            android:tint="@color/white"
-            android:padding="11dp"
-            android:contentDescription="@string/playlists"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/settings"
+                android:textColor="@color/on_surface_variant"
+                android:textSize="11sp"
+                android:maxLines="1"/>
+        </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/btn_albums"
-            android:layout_width="44dp"
-            android:layout_height="44dp"
-            android:layout_marginStart="6dp"
-            android:background="@drawable/bg_icon_circle"
-            android:src="@drawable/ic_album"
-            android:tint="@color/white"
-            android:padding="11dp"
-            android:contentDescription="@string/open_albums"/>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <ImageButton
+                android:id="@+id/btn_statistics"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/bg_icon_circle"
+                android:src="@drawable/ic_statistics"
+                android:tint="@color/white"
+                android:padding="11dp"
+                android:contentDescription="@string/statistics"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/statistics"
+                android:textColor="@color/on_surface_variant"
+                android:textSize="11sp"
+                android:maxLines="1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <ImageButton
+                android:id="@+id/btn_favorite_filter"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/bg_icon_circle"
+                android:src="@drawable/ic_favorite_border"
+                android:tint="@color/white"
+                android:padding="11dp"
+                android:contentDescription="@string/filter_favorites"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/shortcut_favorites"
+                android:textColor="@color/on_surface_variant"
+                android:textSize="11sp"
+                android:maxLines="1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <ImageButton
+                android:id="@+id/btn_playlists"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/bg_icon_circle"
+                android:src="@drawable/ic_queue"
+                android:tint="@color/white"
+                android:padding="11dp"
+                android:contentDescription="@string/playlists"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/shortcut_playlists"
+                android:textColor="@color/on_surface_variant"
+                android:textSize="11sp"
+                android:maxLines="1"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:gravity="center_horizontal">
+
+            <ImageButton
+                android:id="@+id/btn_albums"
+                android:layout_width="44dp"
+                android:layout_height="44dp"
+                android:background="@drawable/bg_icon_circle"
+                android:src="@drawable/ic_album"
+                android:tint="@color/white"
+                android:padding="11dp"
+                android:contentDescription="@string/open_albums"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="@string/shortcut_albums"
+                android:textColor="@color/on_surface_variant"
+                android:textSize="11sp"
+                android:maxLines="1"/>
+        </LinearLayout>
     </LinearLayout>
 
     <!-- Kotak pencarian lagu -->

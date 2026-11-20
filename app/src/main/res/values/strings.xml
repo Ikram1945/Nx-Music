@@ -225,6 +225,9 @@
     <string name="album_artist_empty">Tidak ada lagu ditemukan.</string>
     <string name="artist_count_detail">%1$d lagu · %2$d album</string>
     <string name="open_albums">Buka Album</string>
+    <string name="shortcut_favorites">Favorit</string>
+    <string name="shortcut_playlists">Playlist</string>
+    <string name="shortcut_albums">Album</string>
     <string name="open_artists">Buka Artis</string>
 
     <!-- Baru diputar (recent played) -->
