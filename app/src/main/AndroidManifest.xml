@@ -38,6 +38,7 @@
         <activity android:name=".AlbumDetailActivity" android:exported="false"/>
         <activity android:name=".ArtistActivity" android:exported="false"/>
         <activity android:name=".ArtistDetailActivity" android:exported="false"/>
+        <activity android:name=".TagEditorActivity" android:exported="false"/>
 
         <service
             android:name=".MusicService"

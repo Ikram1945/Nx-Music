@@ -21,15 +21,15 @@ import androidx.appcompat.app.AppCompatActivity
  * Yang diubah adalah baris lagu di MediaStore (info perpustakaan), jadi
  * hasilnya langsung terbaca daftar lagu, Album, dan Artis. Tag bawaan di
  * dalam file audio tidak ditulis ulang — aplikasi lain yang memindai ulang
- * file bisa menimpa info bbini kembali.
+ * file bisa menimpa info ini kembali.
  *
  * Di Android 10+ file milik aplikasi lain hanya boleh diubah setelah user
- * menyetujui dialog izinbnn sistem (RecoverableSecurityException); alur
+ * menyetujui dialog izin sistem (RecoverableSecurityException); alur
  * persetujuan itu ditangani di sini, lalu penyimpanan dicoba sekali lagi.
  *
  * Dibuka dari dialog tekan-lama di daftar lagu (SongListActivity) dan
  * mengembalikan judul/artis baru lewat result agar daftar bisa refresh
- * tanpa memuat ulang seluruh MediahaStore.
+ * tanpa memuat ulang seluruh MediaStore.
  */
 class TagEditorActivity : AppCompatActivity() {
 

@@ -1,29 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Nx Music</string>
-    <string name="no_songs">Tidak ada lagu dintemukan</string>
+    <string name="no_songs">Tidak ada lagu ditemukan</string>
     <string name="permission_denied">Izin akses musik ditolak</string>
     <string name="play_error">Tidak dapat memutar lagu</string>
     <string name="no_playing">Belum ada lagu diputar</string>
     <string name="no_playing_artist">Pilih lagu untuk mulai memutar</string>
     <string name="music_icon">Ikon musik</string>
 
-    <string name="play">Plays</string>
-    <string name="pause">Pauses</string>
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
     <string name="next">Next</string>
     <string name="prev">Prev</string>
     <string name="shuffle">Shuffle</string>
     <string name="repeat">Repeat</string>
     <string name="repeat_one">Repeat One</string>
-    <string name="shuffle_off">Shuffles Off</string>
+    <string name="shuffle_off">Shuffle Off</string>
     <string name="repeat_off">Repeat Off</string>
-    <string name="song_list">DAFTAR LAGUs</string>
+    <string name="song_list">DAFTAR LAGU</string>
     <string name="unknown_artist">Unknown Artist</string>
-    <string name="header_greeting">Selamat Mentdengarkan</string>
+    <string name="header_greeting">Selamat Mendengarkan</string>
     <string name="queue">Antrian</string>
     <string name="queue_empty">Antrian kosong</string>
     <string name="queue_clear">Kosongkan Antrian</string>
-    <string name="queue_cleared">Antrian didkosongkan</string>
+    <string name="queue_cleared">Antrian dikosongkan</string>
     <string name="queue_removed">Dihapus dari antrian</string>
     <string name="play_next">Putar Berikutnya</string>
     <string name="add_to_queue">Tambah ke Antrian</string>
@@ -35,7 +35,7 @@
     <string name="favorites_only">Hanya Favorit</string>
     <string name="favorites_all">Semua Lagu</string>
     <string name="filter_favorites">Tampilkan hanya lagu favorit</string>
-    <string name="open_song_list">Buka Daftar Lagus</string>
+    <string name="open_song_list">Buka Daftar Lagu</string>
     <string name="back">Kembali</string>
     <string name="now_playing_label">NOW PLAYING</string>
 
@@ -77,6 +77,7 @@
     <string name="test_alpha">ALPHA satu</string>
     <string name="test_beta">BETA dua</string>
     <string name="test_gamma">GAMMA tiga</string>
+
 
     <!-- Reverb (gema ruangan) -->
     <string name="reverb">Reverb</string>
@@ -232,4 +233,17 @@
     <string name="motivation_3">Sedikit demi sedikit, lama-lama jadi bukit.</string>
     <string name="motivation_4">Kamu lebih kuat dari yang kamu kira.</string>
     <string name="motivation_5">Jangan menyerah, hasilnya hampir terlihat.</string>
+
+    <!-- Edit Tag (judul, artis, album via MediaStore) -->
+    <string name="edit_tag">Edit Tag</string>
+    <string name="tag_editor_title">EDIT TAG</string>
+    <string name="tag_title_label">Judul</string>
+    <string name="tag_artist_label">Artis</string>
+    <string name="tag_album_label">Album</string>
+    <string name="tag_path_label">Lokasi file</string>
+    <string name="tag_note">Mengubah info lagu di perpustakaan (MediaStore), langsung terbaca di daftar lagu, Album, dan Artis. Tag bawaan di dalam file audio tidak diubah.</string>
+    <string name="tag_save">Simpan</string>
+    <string name="tag_saved">Tag lagu diperbarui</string>
+    <string name="tag_failed">Gagal memperbarui tag lagu</string>
+    <string name="tag_title_empty">Judul tidak boleh kosong</string>
 </resources>

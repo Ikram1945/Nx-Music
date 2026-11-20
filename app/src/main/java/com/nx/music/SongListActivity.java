@@ -31,6 +31,10 @@ import java.util.List;
 public class SongListActivity extends AppCompatActivity {
 
     private static final int REQ_CODE_PERMISSION = 100;
+    private static final int REQ_CODE_EDIT_TAG = 200;
+
+    /** Lagu yang sedang diedit tag-nya; diisi sebelum membuka TagEditorActivity. */
+    private Song editingSong;
 
     private PlaybackController playback;
     private ListView listSongs;
@@ -193,21 +197,44 @@ public class SongListActivity extends AppCompatActivity {
         });
     }
 
-    /** Dialog aksi untuk satu lagu: Putar Berikutnya atau Tambah ke Antrian. */
+    /** Dialog aksi untuk satu lagu: Putar Berikutnya, Tambah ke Antrian, atau Edit Tag. */
     private void showSongOptions(final Song song) {
-        String[] options = {getString(R.string.play_next), getString(R.string.add_to_queue)};
+        String[] options = {getString(R.string.play_next), getString(R.string.add_to_queue),
+                getString(R.string.edit_tag)};
         new AlertDialog.Builder(this)
                 .setTitle(song.title)
                 .setItems(options, (dialog, which) -> {
                     if (which == 0) {
                         playback.addNext(song);
                         Toast.makeText(this, R.string.added_to_play_next, Toast.LENGTH_SHORT).show();
-                    } else {
+                    } else if (which == 1) {
                         playback.addToQueue(song);
                         Toast.makeText(this, R.string.added_to_queue, Toast.LENGTH_SHORT).show();
+                    } else {
+                        editingSong = song;
+                        Intent intent = new Intent(this, TagEditorActivity.class);
+                        intent.putExtra(TagEditorActivity.EXTRA_PATH, song.path);
+                        intent.putExtra(TagEditorActivity.EXTRA_TITLE, song.title);
+                        intent.putExtra(TagEditorActivity.EXTRA_ARTIST, song.artist);
+                        startActivityForResult(intent, REQ_CODE_EDIT_TAG);
                     }
                 })
                 .show();
+    }
+
+    /** Hasil Edit Tag: terapkan judul/artis baru ke objek lagu yang sama, lalu refresh daftar. */
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQ_CODE_EDIT_TAG && resultCode == RESULT_OK
+                && data != null && editingSong != null) {
+            editingSong.title = data.getStringExtra(TagEditorActivity.EXTRA_TITLE);
+            editingSong.artist = data.getStringExtra(TagEditorActivity.EXTRA_ARTIST);
+            editingSong = null;
+            if (adapter != null) {
+                adapter.notifyDataSetChanged();
+            }
+        }
     }
 
     private void checkAndRequestPermission() {
