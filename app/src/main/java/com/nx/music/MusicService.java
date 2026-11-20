@@ -106,7 +106,7 @@ public class MusicService extends Service {
  int pos = getPosition();
  if (pos >= lastTrackedPositionMs) {
  long deltaSec = (pos - lastTrackedPositionMs) /1000L;
- PlaybackStats.getInstance(instance).addListeningTime(deltaSec);
+ PlaybackStats.getInstance(instance).addListeningTime(getCurrentSong(), deltaSec);
  }
  lastTrackedPositionMs = pos;
  statsHandler.postDelayed(statsRunnable, STATS_INTERVAL_MS);

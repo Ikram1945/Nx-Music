@@ -5,6 +5,8 @@ import java.io.File
 /**
  * Satu entri statistik pemutaran: metadata lagu + jumlah putar + waktu terakhir diputar.
  * Dipakai untuk daftar "paling sering diputar" dan "riwayat pemutaran".
+ * [listenSec] = total detik lagu ini didengarkan (untuk "paling lama didengar");
+ * 0 untuk data lama sebelum pencatatan per lagu berjalan.
  */
 class PlaybackHistoryEntry(
     @JvmField var title: String,
@@ -12,6 +14,7 @@ class PlaybackHistoryEntry(
     @JvmField var path: String,
     @JvmField var plays: Int,
     @JvmField var lastPlayedAt: Long,
+    @JvmField var listenSec: Long = 0L,
 ) {
     /**
      * Mengubah entri ini menjadi [Song] agar bisa diputar langsung.

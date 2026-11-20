@@ -22,7 +22,8 @@ data class DayPlays(val dayName: String, val dateLabel: String, val plays: Int)
  * dan riwayat lagu yang baru diputar — semuanya di SharedPreferences.
  *
  * Data per lagu disimpan sebagai JSONObject keyed by path:
- *   { title, artist, plays, last } (last = epoch ms terakhir diputar)
+ *   { title, artist, plays, last, listenSec } (last = epoch ms terakhir diputar,
+ *   listenSec = total detik lagu itu didengarkan)
  * Riwayat disimpan sebagai JSONArray of path, terbaru di depan. ku
  */
 class PlaybackStats private constructor(context: Context) {
@@ -71,11 +72,34 @@ class PlaybackStats private constructor(context: Context) {
         pushHistory(path)
     }
 
-    /** Tambah waktu mendengarkan (detik). Dipanggil berkala dari MusicService. */
+    /** Tambah waktu mendengarkan global (detik). Dipanggil berkala dari MusicService. */
     @Synchronized
     fun addListeningTime(seconds: Long) {
+        addListeningTime(null, seconds)
+    }
+
+    /**
+     * Tambah waktu mendengarkan (detik): ke total global dan, bila [song]
+     * diberikan, ke catatan per lagu ("listenSec") untuk daftar
+     * "paling lama didengar". Catatan per lagu hanya diperbarui bila lagu
+     * sudah punya catatan (dari recordPlayStart); jumlah putar tidak diubah.
+     * Pencatatan per lagu baru berjalan sejak fitur ini ditambahkan.
+     */
+    @Synchronized
+    fun addListeningTime(song: Song?, seconds: Long) {
         if (seconds <= 0) return
-        prefs.edit().putLong(KEY_TOTAL_TIME_SEC, totalListeningTimeSec + seconds).apply()
+        val editor = prefs.edit()
+            .putLong(KEY_TOTAL_TIME_SEC, totalListeningTimeSec + seconds)
+        val path = song?.path
+        if (!path.isNullOrEmpty()) {
+            val records = readRecords()
+            val rec = records.optJSONObject(path)
+            if (rec != null) {
+                rec.put("listenSec", rec.optLong("listenSec", 0L) + seconds)
+                editor.putString(KEY_RECORDS, records.toString())
+            }
+        }
+        editor.apply()
     }
 
     /** Menghapus seluruh statistik & riwayat pemutaran (dari layar pengaturan). */
@@ -110,6 +134,25 @@ class PlaybackStats private constructor(context: Context) {
         }
         list.sortWith(compareByDescending { it.plays })
         return if (list.size > MAX_TOP) ArrayList(list.subList(0, MAX_TOP)) else list
+    }
+
+    /**
+     * Lagu paling lama didengarkan (total detik per lagu), menurun, dibatasi
+     * [limit]. Lagu tanpa catatan waktu dengar (data lama) tidak disertakan.
+     */
+    fun getLongestListened(limit: Int = 5): MutableList<PlaybackHistoryEntry> {
+        val list = ArrayList<PlaybackHistoryEntry>()
+        if (limit <= 0) return list
+        val records = readRecords()
+        val names = records.names() ?: return list
+        for (i in 0 until names.length()) {
+            val path = names.optString(i)
+            val rec = records.optJSONObject(path) ?: continue
+            if (rec.optLong("listenSec", 0L) <= 0L) continue
+            list.add(rec.toEntry(path))
+        }
+        list.sortWith(compareByDescending { it.listenSec })
+        return if (list.size > limit) ArrayList(list.subList(0, limit)) else list
     }
 
     /**
@@ -274,6 +317,7 @@ class PlaybackStats private constructor(context: Context) {
         path,
         optInt("plays", 0),
         optLong("last", 0L),
+        optLong("listenSec", 0L),
     )
 
     companion object {

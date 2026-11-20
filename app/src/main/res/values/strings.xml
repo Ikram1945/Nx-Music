@@ -153,6 +153,8 @@
     <string name="stat_week_note">Putar per hari; pencatatan harian mulai berjalan sejak fitur ini ditambahkan.</string>
     <string name="stat_top_artists">Artis Teratas</string>
     <string name="stat_top_albums">Album Teratas</string>
+    <string name="stat_longest_title">Paling Lama Didengar</string>
+    <string name="stat_longest_note">Waktu dengar per lagu mulai dicatat sejak fitur ini ditambahkan.</string>
     <string name="unknown_title">Tanpa Judul</string>
 
     <!-- Pengaturan (fitur settings) -->
