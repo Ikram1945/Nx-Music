@@ -40,6 +40,7 @@ Memutar file audio yang tersimpan di perangkat lewat `MediaStore`, dengan dukung
 - 🔍 **Pencarian live** (judul/artis) dengan tombol hapus
 - ⭐ **Favorit** — tandai lagu favorit & filter hanya favorit
 - 💿 **Album & Artis** — telusuri lagu per album / per artis (metadata MediaStore), putar satu album/artis penuh
+- 🏷️ **Edit Tag** — ubah judul, artis, dan album lagu dari dialog tekan-lama di daftar lagu (tersimpan di MediaStore, langsung terbaca di Album & Artis)
 - 🧭 Navigasi bawah: **Beranda / Perpustakaan / Daftar Putar**
 - 🕐 **Sleep Timer** — hentikan pemutaran otomatis setelah 10–120 menit
 
@@ -62,6 +63,7 @@ Memutar file audio yang tersimpan di perangkat lewat `MediaStore`, dengan dukung
 | Beranda (launcher) | `MainActivity` | Sambutan, mini-player, daftar lagu & playlist, navigasi bawah |
 | Pemutar | `PlayerActivity` | Artwork, kontrol, equalizer, efek audio, sleep timer, antrian |
 | Perpustakaan | `SongListActivity` | Daftar lagu + pencarian + filter favorit |
+| Edit Tag | `TagEditorActivity` | Ubah judul/artis/album lagu (MediaStore), dari dialog tekan-lama |
 | Daftar Putar | `PlaylistActivity` | Kelola daftar putar |
 | Detail Daftar Putar | `PlaylistDetailActivity` | Isi playlist, tambah/hapus lagu, putar |
 | Album | `AlbumActivity` / `AlbumDetailActivity` | Daftar album + lagu di dalam satu album |
