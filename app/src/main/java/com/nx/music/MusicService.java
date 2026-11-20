@@ -174,6 +174,43 @@ public class MusicService extends Service {
  mediaSession = new MediaSessionCompat(this, "HarmonyMelody");
  mediaSession.setFlags(MediaSessionCompat.FLAG_HANDLES_MEDIA_BUTTONS
  | MediaSessionCompat.FLAG_HANDLES_TRANSPORT_CONTROLS);
+ // Callback transport WAJIB ada: kontrol media sistem (kartu media di panel
+ // notifikasi Android 12+, lock screen, Bluetooth, tombol headset) mengirim
+ // perintah play/pause/next/prev ke MediaSession, BUKAN ke PendingIntent
+ // notifikasi. Tanpa callback ini perintah tersebut hilang ditelan — tombol
+ // di notifikasi terlihat aktif tapi musik tidak berhenti/dimainkan, dan
+ // satu-satunya kontrol yang bekerja adalah tombol di dalam aplikasi.
+ mediaSession.setCallback(new MediaSessionCompat.Callback() {
+ @Override
+ public void onPlay() {
+ playOrResume();
+ }
+
+ @Override
+ public void onPause() {
+ pause();
+ }
+
+ @Override
+ public void onSkipToNext() {
+ skip(true);
+ }
+
+ @Override
+ public void onSkipToPrevious() {
+ skip(false);
+ }
+
+ @Override
+ public void onSeekTo(long pos) {
+ seekTo((int) pos);
+ }
+
+ @Override
+ public void onStop() {
+ pause();
+ }
+ });
  mediaSession.setActive(true);
  }
 
@@ -934,6 +971,9 @@ public class MusicService extends Service {
  if (callback != null) {
  callback.onPlaybackStateChanged();
  }
+ // Semua perubahan status lewat sini, jadi sekalian sinkronkan
+ // PlaybackState MediaSession setiap kali status berubah.
+ updateMediaSessionPlaybackState();
  }
 
  private void notifySongChanged(int index) {
@@ -1090,7 +1130,21 @@ public class MusicService extends Service {
  mediaSession.setMetadata(null);
  }
 
- long duration = song != null ? song.duration :0L;
+ updateMediaSessionPlaybackState();
+ }
+
+ /**
+ * Memperbarui PlaybackState MediaSession saja (status + posisi, tanpa
+ * metadata). Dipanggil dari notifyStateChanged() — corong semua perubahan
+ * status — agar kartu media sistem & lock screen selalu sinkron dengan
+ * MediaPlayer, dari mana pun perintahnya berasal (aplikasi, notifikasi,
+ * Bluetooth). Sebelumnya state ini hanya diperbarui saat notifikasi
+ * dibangun ulang, jadi status di notifikasi bisa tertinggal.
+ */
+ private void updateMediaSessionPlaybackState() {
+ if (mediaSession == null) {
+ return;
+ }
  long position =0L;
  if (mediaPlayer != null) {
  try {
@@ -1105,7 +1159,8 @@ public class MusicService extends Service {
  long actions = PlaybackStateCompat.ACTION_PLAY | PlaybackStateCompat.ACTION_PAUSE
  | PlaybackStateCompat.ACTION_PLAY_PAUSE
  | PlaybackStateCompat.ACTION_SKIP_TO_NEXT
- | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS;
+ | PlaybackStateCompat.ACTION_SKIP_TO_PREVIOUS
+ | PlaybackStateCompat.ACTION_SEEK_TO;
 
  PlaybackStateCompat state = new PlaybackStateCompat.Builder()
  .setActions(actions)
