@@ -57,13 +57,20 @@ public class MainActivity extends AppCompatActivity implements PlaybackCallback 
     private View recentSection;
     private TextView txtRecentLabel;
 
-    private TextView txtHomeSubtitle;
+    private TextView txtHomeGreeting;
+    private TextView txtHomeDate;
+    private TextView txtHomeMotivation;
+    private TextView txtStatSongs;
+    private TextView txtStatPlays;
+    private TextView txtStatTime;
     private final List<ObjectAnimator> homeBarAnimators = new ArrayList<>();
     private int homeMotivationIndex = 0;
     private static final long HOME_MOTIVATION_INTERVAL_MS = 7000L;
     private static final int[] HOME_MOTIVATION_RES = {
             R.string.motivation_1, R.string.motivation_2, R.string.motivation_3,
-            R.string.motivation_4, R.string.motivation_5
+            R.string.motivation_4, R.string.motivation_5, R.string.motivation_6,
+            R.string.motivation_7, R.string.motivation_8, R.string.motivation_9,
+            R.string.motivation_10
     };
     private static final int[] HOME_BAR_IDS = {
             R.id.home_bar_1, R.id.home_bar_2, R.id.home_bar_3
@@ -119,12 +126,38 @@ public class MainActivity extends AppCompatActivity implements PlaybackCallback 
         checkAndRequestPermission();
     }
 
-    /** Sapaan dinamis (jam) + penyemangat bergiliran + bar equalizer kecil di header home. */
+    /** Kartu sapaan: sapaan dinamis (jam) + tanggal + penyemangat bergiliran + bar equalizer. */
     private void setupHomeGreeting() {
-        txtHomeSubtitle = findViewById(R.id.txt_home_subtitle);
-        txtHomeSubtitle.setText(composeSubtitle(greetingForHour(java.util.Calendar.getInstance()
-                .get(java.util.Calendar.HOUR_OF_DAY)), HOME_MOTIVATION_RES[0]));
+        txtHomeGreeting = findViewById(R.id.txt_home_greeting);
+        txtHomeDate = findViewById(R.id.txt_home_date);
+        txtHomeMotivation = findViewById(R.id.txt_home_motivation);
+        txtStatSongs = findViewById(R.id.txt_stat_songs);
+        txtStatPlays = findViewById(R.id.txt_stat_plays);
+        txtStatTime = findViewById(R.id.txt_stat_time);
+        // Mulai dari penyemangat acak, bukan selalu nomor 1.
+        homeMotivationIndex = new java.util.Random().nextInt(HOME_MOTIVATION_RES.length);
+        refreshHomeGreetingTexts();
+        // Ketuk kartu -> penyemangat berikutnya sekarang juga, jadwal putar diulang dari awal.
+        findViewById(R.id.home_card).setOnClickListener(v -> {
+            rotateHomeMotivation();
+            startHomeMotivationRotation();
+        });
         startHomeBarPulse();
+    }
+
+    /** Isi teks sapaan (sesuai jam), tanggal hari ini, dan penyemangat aktif. */
+    private void refreshHomeGreetingTexts() {
+        if (txtHomeGreeting != null) {
+            txtHomeGreeting.setText(greetingForHour(java.util.Calendar.getInstance()
+                    .get(java.util.Calendar.HOUR_OF_DAY)));
+        }
+        if (txtHomeDate != null) {
+            txtHomeDate.setText(new java.text.SimpleDateFormat("EEEE, d MMMM yyyy",
+                    new java.util.Locale("id", "ID")).format(new java.util.Date()));
+        }
+        if (txtHomeMotivation != null) {
+            txtHomeMotivation.setText(HOME_MOTIVATION_RES[homeMotivationIndex]);
+        }
     }
 
     /** Pilih sapaan sesuai jam (0-23). */
@@ -135,21 +168,37 @@ public class MainActivity extends AppCompatActivity implements PlaybackCallback 
         return R.string.greeting_night;
     }
 
-    /** Subtitle header: "sapaan · penyemangat" dalam satu baris. */
-    private CharSequence composeSubtitle(int greetingRes, int motivationRes) {
-        return getString(greetingRes) + "  ·  " + getString(motivationRes);
+    /** Ganti kata penyemangat di kartu home dengan fade singkat. */
+    private void rotateHomeMotivation() {
+        if (txtHomeMotivation == null) return;
+        homeMotivationIndex = (homeMotivationIndex + 1) % HOME_MOTIVATION_RES.length;
+        txtHomeMotivation.animate().cancel();
+        txtHomeMotivation.animate().alpha(0f).setDuration(220L).withEndAction(() -> {
+            refreshHomeGreetingTexts();
+            txtHomeMotivation.animate().alpha(1f).setDuration(320L).start();
+        }).start();
     }
 
-    /** Ganti kata penyemangat di home dengan fade singkat. */
-    private void rotateHomeMotivation() {
-        if (txtHomeSubtitle == null) return;
-        homeMotivationIndex = (homeMotivationIndex + 1) % HOME_MOTIVATION_RES.length;
-        txtHomeSubtitle.animate().cancel();
-        txtHomeSubtitle.animate().alpha(0f).setDuration(220L).withEndAction(() -> {
-            txtHomeSubtitle.setText(composeSubtitle(greetingForHour(java.util.Calendar.getInstance()
-                    .get(java.util.Calendar.HOUR_OF_DAY)), HOME_MOTIVATION_RES[homeMotivationIndex]));
-            txtHomeSubtitle.animate().alpha(1f).setDuration(320L).start();
+    /** Segarkan strip ringkasan kartu home: jumlah lagu, total putar, waktu dengar. */
+    private void refreshHomeStats() {
+        if (txtStatSongs != null) txtStatSongs.setText(String.valueOf(songs.size()));
+        new Thread(() -> {
+            final PlaybackStats stats = PlaybackStats.getInstance(this);
+            final int plays = stats.getTotalPlays();
+            final long timeSec = stats.getTotalListeningTimeSec();
+            runOnUiThread(() -> {
+                if (txtStatPlays != null) txtStatPlays.setText(String.valueOf(plays));
+                if (txtStatTime != null) txtStatTime.setText(formatListenTime(timeSec));
+            });
         }).start();
+    }
+
+    /** Format detik -> "X jam Y mnt" / "Y mnt" (sama seperti layar Statistik). */
+    private String formatListenTime(long totalSec) {
+        long hours = totalSec / 3600L;
+        long minutes = (totalSec % 3600L) / 60L;
+        return hours > 0 ? getString(R.string.stat_time_hours, hours, minutes)
+                : getString(R.string.stat_time_minutes, minutes);
     }
 
     private void startHomeMotivationRotation() {
@@ -274,6 +323,7 @@ public class MainActivity extends AppCompatActivity implements PlaybackCallback 
                 }
                 songAdapter.setSongs(result);
                 songAdapter.notifyDataSetChanged();
+                refreshHomeStats();
             });
         }).start();
     }
@@ -286,6 +336,7 @@ public class MainActivity extends AppCompatActivity implements PlaybackCallback 
         }
         updateMiniPlayer();
         reloadRecent();
+        refreshHomeStats();
         // Bar & penyemangat dimatikan di onPause; nyalakan lagi tiap balik ke home.
         startHomeBarPulse();
         startHomeMotivationRotation();

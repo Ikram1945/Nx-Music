@@ -250,6 +250,17 @@
     <string name="motivation_3">Sedikit demi sedikit, lama-lama jadi bukit.</string>
     <string name="motivation_4">Kamu lebih kuat dari yang kamu kira.</string>
     <string name="motivation_5">Jangan menyerah, hasilnya hampir terlihat.</string>
+    <string name="motivation_6">Hari yang baik dimulai dengan lagu yang baik.</string>
+    <string name="motivation_7">Istirahat sebentar juga bagian dari maju.</string>
+    <string name="motivation_8">Fokus satu hal, selesaikan, lalu lanjut.</string>
+    <string name="motivation_9">Versi terbaikmu sedang dalam perjalanan.</string>
+    <string name="motivation_10">Terus melangkah, Ikram — pelan pun tetap maju.</string>
+
+    <!-- Kartu sapaan di menu utama (Beranda) -->
+    <string name="home_stat_songs">Lagu</string>
+    <string name="home_stat_plays">Kali diputar</string>
+    <string name="home_stat_time">Waktu dengar</string>
+    <string name="home_card_hint">Ketuk kartu untuk penyemangat berikutnya</string>
 
     <!-- Edit Tag (judul, artis, album via MediaStore) -->
     <string name="edit_tag">Edit Tag</string>
