@@ -76,34 +76,37 @@
             android:paddingEnd="16dp"
             android:paddingBottom="24dp">
 
-            <!-- ===== Kartu ringkasan: total putar + waktu mendengar ===== -->
-            <com.google.android.material.card.MaterialCardView
+            <!-- ===== Strip rincian horizontal: lima angka setara dalam ubin 2 + 3,
+                 tidak ada lagi satu angka raksasa yang mendominasi ===== -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="16dp"
-                app:cardBackgroundColor="@color/primary_container"
-                app:cardCornerRadius="24dp"
-                app:cardElevation="0dp">
+                android:orientation="horizontal"
+                android:layout_marginBottom="8dp">
 
-                <LinearLayout
-                    android:layout_width="match_parent"
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="18dp"
-                    android:gravity="center_vertical">
+                    android:layout_weight="1"
+                    android:layout_marginEnd="4dp"
+                    app:cardBackgroundColor="@color/card_bg"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/divider"
+                    app:strokeWidth="1dp">
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:orientation="vertical"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:padding="12dp">
 
                         <ImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:src="@drawable/ic_play"
-                            android:tint="@color/on_primary_container"
+                            android:tint="@color/primary"
                             android:contentDescription="@string/stat_total_plays"/>
 
                         <TextView
@@ -112,38 +115,44 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
                             android:text="0"
-                            android:textColor="@color/on_primary_container"
-                            android:textSize="28sp"
+                            android:textColor="@color/on_surface"
+                            android:textSize="18sp"
                             android:textStyle="bold"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/stat_total_plays"
-                            android:textColor="@color/on_primary_container"
-                            android:textSize="12sp"
                             android:layout_marginTop="2dp"
-                            android:alpha="0.8"/>
+                            android:gravity="center"
+                            android:text="@string/stat_total_plays"
+                            android:textColor="@color/on_surface_variant"
+                            android:textSize="10sp"/>
                     </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
 
-                    <View
-                        android:layout_width="1dp"
-                        android:layout_height="64dp"
-                        android:background="@color/on_primary_container"
-                        android:alpha="0.2"/>
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="4dp"
+                    app:cardBackgroundColor="@color/card_bg"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/divider"
+                    app:strokeWidth="1dp">
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:orientation="vertical"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:padding="12dp">
 
                         <ImageView
-                            android:layout_width="28dp"
-                            android:layout_height="28dp"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
                             android:src="@drawable/ic_sleep_timer"
-                            android:tint="@color/on_primary_container"
+                            android:tint="@color/primary"
                             android:contentDescription="@string/stat_total_time"/>
 
                         <TextView
@@ -151,144 +160,168 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="6dp"
-                            android:text="0m"
-                            android:textColor="@color/on_primary_container"
-                            android:textSize="28sp"
+                            android:text="0 mnt"
+                            android:textColor="@color/on_surface"
+                            android:textSize="18sp"
                             android:textStyle="bold"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/stat_total_time"
-                            android:textColor="@color/on_primary_container"
-                            android:textSize="12sp"
                             android:layout_marginTop="2dp"
-                            android:alpha="0.8"/>
+                            android:gravity="center"
+                            android:text="@string/stat_total_time"
+                            android:textColor="@color/on_surface_variant"
+                            android:textSize="10sp"/>
                     </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
 
-            <!-- ===== Rincian: lagu unik, artis unik, rata-rata dengar ===== -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center_vertical"
-                android:layout_marginBottom="10dp">
+                android:layout_marginBottom="18dp">
 
-                <ImageView
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:background="@drawable/bg_icon_circle"
-                    android:padding="7dp"
-                    android:src="@drawable/ic_statistics"
-                    android:tint="@color/white"
-                    android:contentDescription="@string/stat_detail_title"/>
-
-                <TextView
-                    android:id="@+id/txt_detail_header"
+                <com.google.android.material.card.MaterialCardView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/stat_detail_title"
-                    android:textColor="@color/on_surface"
-                    android:textSize="16sp"
-                    android:textStyle="bold"
-                    android:paddingStart="10dp"/>
-            </LinearLayout>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="18dp"
-                app:cardBackgroundColor="@color/card_bg"
-                app:cardCornerRadius="24dp"
-                app:cardElevation="0dp"
-                app:strokeColor="@color/divider"
-                app:strokeWidth="1dp">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:padding="16dp">
+                    android:layout_marginEnd="4dp"
+                    app:cardBackgroundColor="@color/card_bg"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/divider"
+                    app:strokeWidth="1dp">
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:orientation="vertical"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:padding="12dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_music_note"
+                            android:tint="@color/primary"
+                            android:contentDescription="@string/stat_unique_songs"/>
 
                         <TextView
                             android:id="@+id/txt_unique_songs"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
                             android:text="0"
-                            android:textColor="@color/primary"
-                            android:textSize="20sp"
+                            android:textColor="@color/on_surface"
+                            android:textSize="18sp"
                             android:textStyle="bold"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:gravity="center"
                             android:text="@string/stat_unique_songs"
                             android:textColor="@color/on_surface_variant"
-                            android:textSize="11sp"
-                            android:layout_marginTop="2dp"/>
+                            android:textSize="10sp"/>
                     </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="4dp"
+                    app:cardBackgroundColor="@color/card_bg"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/divider"
+                    app:strokeWidth="1dp">
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:orientation="vertical"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:padding="12dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_artist"
+                            android:tint="@color/primary"
+                            android:contentDescription="@string/stat_unique_artists"/>
 
                         <TextView
                             android:id="@+id/txt_unique_artists"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
                             android:text="0"
-                            android:textColor="@color/primary"
-                            android:textSize="20sp"
+                            android:textColor="@color/on_surface"
+                            android:textSize="18sp"
                             android:textStyle="bold"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:gravity="center"
                             android:text="@string/stat_unique_artists"
                             android:textColor="@color/on_surface_variant"
-                            android:textSize="11sp"
-                            android:layout_marginTop="2dp"/>
+                            android:textSize="10sp"/>
                     </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:layout_marginStart="4dp"
+                    app:cardBackgroundColor="@color/card_bg"
+                    app:cardCornerRadius="18dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/divider"
+                    app:strokeWidth="1dp">
 
                     <LinearLayout
-                        android:layout_width="0dp"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
                         android:orientation="vertical"
-                        android:gravity="center">
+                        android:gravity="center"
+                        android:padding="12dp">
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_statistics"
+                            android:tint="@color/primary"
+                            android:contentDescription="@string/stat_avg_listen"/>
 
                         <TextView
                             android:id="@+id/txt_avg_listen"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
                             android:text="0"
-                            android:textColor="@color/primary"
-                            android:textSize="20sp"
+                            android:textColor="@color/on_surface"
+                            android:textSize="18sp"
                             android:textStyle="bold"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:gravity="center"
                             android:text="@string/stat_avg_listen"
                             android:textColor="@color/on_surface_variant"
-                            android:textSize="11sp"
-                            android:layout_marginTop="2dp"/>
+                            android:textSize="10sp"/>
                     </LinearLayout>
-                </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
 
             <!-- ===== Aktivitas 7 hari terakhir ===== -->
             <LinearLayout
