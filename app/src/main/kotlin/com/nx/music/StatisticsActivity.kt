@@ -25,9 +25,17 @@ class StatisticsActivity : AppCompatActivity() {
 
     private lateinit var txtTotalPlays: TextView
     private lateinit var txtTotalTime: TextView
+    private lateinit var txtUniqueSongs: TextView
+    private lateinit var txtUniqueArtists: TextView
+    private lateinit var txtAvgListen: TextView
     private lateinit var txtTopHeader: TextView
+    private lateinit var txtTopArtistsHeader: TextView
+    private lateinit var txtTopAlbumsHeader: TextView
     private lateinit var txtHistoryHeader: TextView
+    private lateinit var weekContainer: LinearLayout
     private lateinit var topContainer: LinearLayout
+    private lateinit var artistsContainer: LinearLayout
+    private lateinit var albumsContainer: LinearLayout
     private lateinit var historyContainer: LinearLayout
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,9 +46,17 @@ class StatisticsActivity : AppCompatActivity() {
 
         txtTotalPlays = findViewById(R.id.txt_total_plays)
         txtTotalTime = findViewById(R.id.txt_total_time)
+        txtUniqueSongs = findViewById(R.id.txt_unique_songs)
+        txtUniqueArtists = findViewById(R.id.txt_unique_artists)
+        txtAvgListen = findViewById(R.id.txt_avg_listen)
         txtTopHeader = findViewById(R.id.txt_top_header)
+        txtTopArtistsHeader = findViewById(R.id.txt_top_artists_header)
+        txtTopAlbumsHeader = findViewById(R.id.txt_top_albums_header)
         txtHistoryHeader = findViewById(R.id.txt_history_header)
+        weekContainer = findViewById(R.id.week_container)
         topContainer = findViewById(R.id.top_container)
+        artistsContainer = findViewById(R.id.artists_container)
+        albumsContainer = findViewById(R.id.albums_container)
         historyContainer = findViewById(R.id.history_container)
 
         val btnBack = findViewById<ImageButton>(R.id.btn_back)
@@ -54,6 +70,30 @@ class StatisticsActivity : AppCompatActivity() {
 
         txtTotalPlays.text = stats.totalPlays.toString()
         txtTotalTime.text = formatDuration(stats.totalListeningTimeSec)
+
+        // Rincian: cakupan data + rata-rata waktu dengar per putaran.
+        txtUniqueSongs.text = stats.uniqueSongCount.toString()
+        txtUniqueArtists.text = stats.uniqueArtistCount.toString()
+        val avgSec = if (stats.totalPlays > 0) {
+            stats.totalListeningTimeSec / stats.totalPlays
+        } else {
+            0L
+        }
+        txtAvgListen.text = formatAvgDuration(avgSec)
+
+        buildWeekChart(stats.getDailyPlays(7))
+        populateArtists(stats.getTopArtists(5))
+
+        // Album teratas perlu query MediaStore (path -> album), jadi jalan di
+        // thread latar seperti pola AlbumActivity, lalu hasilnya ke UI.
+        Thread {
+            val albums = stats.getTopAlbums(SongLoader.loadAlbumByPath(this), 5)
+            runOnUiThread {
+                if (!isFinishing && !isDestroyed) {
+                    populateAlbums(albums)
+                }
+            }
+        }.start()
 
         val top = stats.getTopPlayed()
         val history = stats.getHistory()
@@ -203,6 +243,233 @@ class StatisticsActivity : AppCompatActivity() {
         row.addView(col)
         parent.addView(row)
         row.setOnClickListener { playSong(entry) }
+    }
+
+    private fun populateArtists(artists: List<GroupStat>) {
+        if (artists.isEmpty()) {
+            txtTopArtistsHeader.visibility = View.GONE
+            addEmptyRow(artistsContainer)
+            return
+        }
+        var maxPlays = 1
+        for (g in artists) {
+            maxPlays = maxOf(maxPlays, g.plays)
+        }
+        for (i in artists.indices) {
+            addGroupBarRow(artistsContainer, artists[i], maxPlays, i)
+        }
+    }
+
+    private fun populateAlbums(albums: List<GroupStat>) {
+        if (albums.isEmpty()) {
+            txtTopAlbumsHeader.visibility = View.GONE
+            addEmptyRow(albumsContainer)
+            return
+        }
+        var maxPlays = 1
+        for (g in albums) {
+            maxPlays = maxOf(maxPlays, g.plays)
+        }
+        for (i in albums.indices) {
+            addGroupBarRow(albumsContainer, albums[i], maxPlays, i)
+        }
+    }
+
+    /** Baris bar untuk satu kelompok (artis/album): peringkat + nama + bar. */
+    private fun addGroupBarRow(parent: LinearLayout, group: GroupStat, maxPlays: Int, rank: Int) {
+        val row = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+            setPadding(dp(16), dp(8), dp(16), dp(8))
+        }
+
+        val rankTv = TextView(this).apply {
+            text = (rank + 1).toString()
+            setTextColor(ContextCompat.getColor(this@StatisticsActivity, R.color.white))
+            textSize = 13f
+            typeface = Typeface.DEFAULT_BOLD
+            gravity = Gravity.CENTER
+            setBackgroundResource(R.drawable.bg_icon_circle)
+        }
+        row.addView(rankTv, LinearLayout.LayoutParams(dp(26), dp(26)).apply {
+            setMargins(0, 0, dp(12), 0)
+        })
+
+        val col = LinearLayout(this).apply {
+            orientation = LinearLayout.VERTICAL
+            layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        }
+
+        val head = LinearLayout(this).apply {
+            orientation = LinearLayout.HORIZONTAL
+            gravity = Gravity.CENTER_VERTICAL
+        }
+        val nameTv = TextView(this).apply {
+            text = group.name
+            setTextColor(ContextCompat.getColor(this@StatisticsActivity, R.color.on_surface))
+            textSize = 14f
+            typeface = Typeface.DEFAULT_BOLD
+            maxLines = 1
+            ellipsize = TextUtils.TruncateAt.END
+        }
+        head.addView(nameTv, LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f))
+        val countTv = TextView(this).apply {
+            text = getString(R.string.stat_plays_count, group.plays)
+            setTextColor(ContextCompat.getColor(this@StatisticsActivity, R.color.primary))
+            textSize = 13f
+            typeface = Typeface.DEFAULT_BOLD
+        }
+        head.addView(countTv)
+        col.addView(head)
+
+        val subTv = TextView(this).apply {
+            text = getString(R.string.playlist_count_song, group.songCount)
+            setTextColor(ContextCompat.getColor(this@StatisticsActivity, R.color.on_surface_variant))
+            textSize = 12f
+        }
+        col.addView(subTv)
+
+        val barArea = FrameLayout(this).apply {
+            layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, dp(16)).apply {
+                setMargins(0, dp(6), 0, 0)
+            }
+        }
+        val track = View(this).apply {
+            setBackgroundResource(R.drawable.bg_bar_track)
+        }
+        barArea.addView(
+            track,
+            FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.MATCH_PARENT,
+                FrameLayout.LayoutParams.MATCH_PARENT,
+            ),
+        )
+        val fill = View(this).apply {
+            setBackgroundResource(R.drawable.bg_bar_fill)
+            backgroundTintList = ColorStateList.valueOf(
+                ContextCompat.getColor(
+                    this@StatisticsActivity,
+                    if (rank < 3) R.color.primary else R.color.primary_gradient_end,
+                ),
+            )
+        }
+        barArea.addView(
+            fill,
+            FrameLayout.LayoutParams(dp(6), FrameLayout.LayoutParams.MATCH_PARENT, Gravity.START),
+        )
+        barArea.post {
+            val available = barArea.width
+            if (available > 0) {
+                var target = (group.plays.toFloat() / maxPlays.toFloat() * available).toInt()
+                if (target < dp(6)) {
+                    target = dp(6)
+                }
+                val lp = fill.layoutParams
+                lp.width = target
+                fill.layoutParams = lp
+            }
+        }
+        col.addView(barArea)
+
+        row.addView(col)
+        parent.addView(row)
+    }
+
+    /** Grafik kolom jumlah putar per hari untuk 7 hari terakhir. */
+    private fun buildWeekChart(days: List<DayPlays>) {
+        var maxPlays = 1
+        for (d in days) {
+            maxPlays = maxOf(maxPlays, d.plays)
+        }
+        for (day in days) {
+            val col = LinearLayout(this).apply {
+                orientation = LinearLayout.VERTICAL
+                gravity = Gravity.CENTER_HORIZONTAL
+            }
+            weekContainer.addView(
+                col,
+                LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f),
+            )
+
+            val valueTv = TextView(this).apply {
+                text = day.plays.toString()
+                setTextColor(ContextCompat.getColor(this@StatisticsActivity, R.color.primary))
+                textSize = 11f
+                typeface = Typeface.DEFAULT_BOLD
+                gravity = Gravity.CENTER
+            }
+            col.addView(valueTv)
+
+            val barArea = FrameLayout(this).apply {
+                layoutParams = LinearLayout.LayoutParams(dp(22), dp(72)).apply {
+                    setMargins(0, dp(4), 0, dp(4))
+                }
+            }
+            val track = View(this).apply {
+                setBackgroundResource(R.drawable.bg_bar_track)
+            }
+            barArea.addView(
+                track,
+                FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                ),
+            )
+            val fill = View(this).apply {
+                setBackgroundResource(R.drawable.bg_bar_fill)
+            }
+            barArea.addView(
+                fill,
+                FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.MATCH_PARENT,
+                    0,
+                    Gravity.BOTTOM,
+                ),
+            )
+            barArea.post {
+                val available = barArea.height
+                if (available > 0) {
+                    var target = (day.plays.toFloat() / maxPlays.toFloat() * available).toInt()
+                    if (day.plays > 0 && target < dp(3)) {
+                        target = dp(3)
+                    }
+                    val lp = fill.layoutParams
+                    lp.height = target
+                    fill.layoutParams = lp
+                }
+            }
+            col.addView(barArea)
+
+            val dayTv = TextView(this).apply {
+                text = day.dayName
+                setTextColor(ContextCompat.getColor(this@StatisticsActivity, R.color.on_surface))
+                textSize = 11f
+                gravity = Gravity.CENTER
+            }
+            col.addView(dayTv)
+
+            val dateTv = TextView(this).apply {
+                text = day.dateLabel
+                setTextColor(ContextCompat.getColor(this@StatisticsActivity, R.color.on_surface_variant))
+                textSize = 10f
+                gravity = Gravity.CENTER
+            }
+            col.addView(dateTv)
+        }
+    }
+
+    /** Rata-rata dengar per putar; detik ditampilkan bila di bawah 1 menit. */
+    private fun formatAvgDuration(totalSec: Long): String {
+        if (totalSec < 60) {
+            return getString(R.string.stat_seconds, totalSec)
+        }
+        val minutes = totalSec / 60L
+        val seconds = totalSec % 60L
+        return if (seconds > 0) {
+            getString(R.string.stat_avg_min_sec, minutes, seconds)
+        } else {
+            getString(R.string.stat_time_minutes, minutes)
+        }
     }
 
     private fun addHistoryRow(parent: LinearLayout, index: Int, entry: PlaybackHistoryEntry) {

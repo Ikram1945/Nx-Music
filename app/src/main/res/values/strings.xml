@@ -143,6 +143,16 @@
     <string name="stat_minutes_ago">%1$d mnt lalu</string>
     <string name="stat_hours_ago">%1$d jam lalu</string>
     <string name="stat_days_ago">%1$d hari lalu</string>
+    <string name="stat_detail_title">Rincian</string>
+    <string name="stat_unique_songs">Lagu Unik</string>
+    <string name="stat_unique_artists">Artis Unik</string>
+    <string name="stat_avg_listen">Rata-rata/Putar</string>
+    <string name="stat_seconds">%1$d dtk</string>
+    <string name="stat_avg_min_sec">%1$d mnt %2$d dtk</string>
+    <string name="stat_week_title">Aktivitas 7 Hari Terakhir</string>
+    <string name="stat_week_note">Putar per hari; pencatatan harian mulai berjalan sejak fitur ini ditambahkan.</string>
+    <string name="stat_top_artists">Artis Teratas</string>
+    <string name="stat_top_albums">Album Teratas</string>
     <string name="unknown_title">Tanpa Judul</string>
 
     <!-- Pengaturan (fitur settings) -->

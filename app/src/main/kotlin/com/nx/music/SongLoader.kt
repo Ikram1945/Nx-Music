@@ -150,6 +150,21 @@ object SongLoader {
         value?.trim()?.ifEmpty { "<unknown>" } ?: "<unknown>"
 
     /**
+     * Peta path file -> nama album (kolom ALBUM MediaStore), untuk layar
+     * Statistik (Album Teratas): statistik hanya menyimpan path, jadi nama
+     * albumnya dicari dari sini.
+     */
+    @JvmStatic
+    fun loadAlbumByPath(context: Context): Map<String, String> {
+        val result = HashMap<String, String>()
+        for (swa in loadSongsWithAlbum(context.contentResolver)) {
+            val path = swa.song.path ?: continue
+            result[path] = displayName(swa.album)
+        }
+        return result
+    }
+
+    /**
      * Mengelompokkan lagu per album (kolom ALBUM MediaStore). Dipakai menu
      * Album. Urut: nama album A-Z. Album kompilasi memakai artis lagu
      * pertamanya sebagai artis album.

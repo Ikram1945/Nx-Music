@@ -45,7 +45,7 @@ Memutar file audio yang tersimpan di perangkat lewat `MediaStore`, dengan dukung
 - 🕐 **Sleep Timer** — hentikan pemutaran otomatis setelah 10–120 menit
 
 ### Statistik & Personalisasi
-- 📈 **Statistik & Riwayat Pemutaran** — total putar, waktu mendengar, lagu teratas, riwayat terbaru (baris dapat diklik untuk memutar)
+- 📈 **Statistik & Riwayat Pemutaran** — total putar, waktu mendengar, rincian (lagu/artis unik, rata-rata dengar per putar), grafik aktivitas 7 hari, lagu/artis/album teratas, riwayat terbaru (baris dapat diklik untuk memutar)
 - 🎨 **Tema kustom** — Default/Biru/Hijau/Ungu/Oranye/Merah
 - 🌗 **Mode gelap & terang** — ikuti sistem / paksa terang / paksa gelap
 - 🔤 **Urutan daftar lagu** — default / judul (A–Z) / artis / durasi terpendek
