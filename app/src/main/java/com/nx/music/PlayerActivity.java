@@ -20,6 +20,7 @@ import android.view.animation.RotateAnimation;
 import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -1006,56 +1007,112 @@ public class PlayerActivity extends AppCompatActivity implements PlaybackCallbac
                 .show();
     }
 
-    /** Menampilkan dialog daftar "Putar Berikutnya" (antrian up-next). */
     /**
      * Menampilkan dialog Sleep Timer (fitur #2) untuk mengatur waktu berhenti
-     * otomatis pemutaran musik.
+     * otomatis pemutaran musik. Memakai layout dialog_sleep_timer.xml: status
+     * sisa waktu yang diperbarui tiap detik, chip durasi, dan menit kustom.
      */
     private void showSleepTimerDialog() {
-        final String[] items = {
-                getString(R.string.sleep_timer_off),
-                getString(R.string.sleep_timer_10),
-                getString(R.string.sleep_timer_15),
-                getString(R.string.sleep_timer_20),
-                getString(R.string.sleep_timer_30),
-                getString(R.string.sleep_timer_45),
-                getString(R.string.sleep_timer_60),
-                getString(R.string.sleep_timer_90),
-                getString(R.string.sleep_timer_120)
+        final View view = getLayoutInflater().inflate(R.layout.dialog_sleep_timer, null);
+        final TextView txtStatus = view.findViewById(R.id.txt_sleep_status);
+        final ChipGroup chipGroup = view.findViewById(R.id.chip_group_sleep);
+        final EditText edtCustom = view.findViewById(R.id.edt_sleep_custom);
+
+        // Chip durasi, urut dari "Matikan" sampai terlama; indeks sejajar.
+        final int[] chipIds = {
+                R.id.chip_sleep_off, R.id.chip_sleep_10, R.id.chip_sleep_15,
+                R.id.chip_sleep_20, R.id.chip_sleep_30, R.id.chip_sleep_45,
+                R.id.chip_sleep_60, R.id.chip_sleep_90, R.id.chip_sleep_120
         };
         final int[] minutes = {0, 10, 15, 20, 30, 45, 60, 90, 120};
 
-        int checked = 0;
-        if (playback != null && playback.isSleepTimerActive()) {
-            int current = playback.getSleepTimerMinutes();
-            for (int i = 0; i < minutes.length; i++) {
-                if (minutes[i] == current) {
-                    checked = i;
-                    break;
-                }
+        // Praseleksi: chip sesuai timer aktif; durasi di luar daftar chip
+        // (hasil set kustom sebelumnya) ditampilkan di kolom menit kustom.
+        final int current = (playback != null && playback.isSleepTimerActive())
+                ? playback.getSleepTimerMinutes() : 0;
+        boolean matched = false;
+        for (int i = 0; i < minutes.length; i++) {
+            if (minutes[i] == current) {
+                chipGroup.check(chipIds[i]);
+                matched = true;
+                break;
             }
         }
+        if (!matched) {
+            chipGroup.check(R.id.chip_sleep_off);
+            edtCustom.setText(String.valueOf(current));
+        }
+        // Memilih chip setelah ini mengosongkan menit kustom, agar jelas
+        // pilihan mana yang berlaku saat "Terapkan" ditekan.
+        chipGroup.setOnCheckedStateChangeListener((group, checkedIds) ->
+                edtCustom.setText(""));
 
-        new MaterialAlertDialogBuilder(this)
-                .setTitle(R.string.sleep_timer_title)
-                .setMessage(R.string.sleep_timer_hint)
-                .setSingleChoiceItems(items, checked, (dialog, which) -> {
-                    if (which == 0) {
-                        if (playback != null) {
-                            playback.cancelSleepTimer();
+        // Status sisa waktu, diperbarui tiap detik selama dialog terbuka.
+        final Runnable[] statusTick = new Runnable[1];
+        statusTick[0] = () -> {
+            updateSleepStatusText(txtStatus);
+            handler.postDelayed(statusTick[0], 1000L);
+        };
+        updateSleepStatusText(txtStatus);
+        handler.postDelayed(statusTick[0], 1000L);
+
+        final AlertDialog dialog = new MaterialAlertDialogBuilder(this)
+                .setView(view)
+                .setPositiveButton(R.string.sleep_timer_apply, (d, which) -> {
+                    int chosen = -1;
+                    final String customText = edtCustom.getText().toString().trim();
+                    if (!customText.isEmpty()) {
+                        try {
+                            chosen = Integer.parseInt(customText);
+                        } catch (NumberFormatException e) {
+                            chosen = -1;
                         }
-                        Toast.makeText(this, R.string.sleep_timer_cancelled, Toast.LENGTH_SHORT).show();
-                    } else {
-                        if (playback != null) {
-                            playback.setSleepTimer(minutes[which]);
-                        }
-                        Toast.makeText(this,
-                                getString(R.string.sleep_timer_set, minutes[which]),
-                                Toast.LENGTH_SHORT).show();
                     }
-                    dialog.dismiss();
+                    if (chosen < 0) {
+                        final int checkedId = chipGroup.getCheckedChipId();
+                        for (int i = 0; i < chipIds.length; i++) {
+                            if (chipIds[i] == checkedId) {
+                                chosen = minutes[i];
+                                break;
+                            }
+                        }
+                    }
+                    if (chosen < 0) {
+                        chosen = 0;
+                    }
+                    if (playback != null) {
+                        if (chosen == 0) {
+                            playback.cancelSleepTimer();
+                        } else {
+                            playback.setSleepTimer(chosen);
+                        }
+                    }
+                    Toast.makeText(this,
+                            chosen == 0
+                                    ? getString(R.string.sleep_timer_cancelled)
+                                    : getString(R.string.sleep_timer_set, chosen),
+                            Toast.LENGTH_SHORT).show();
+                    updateSleepTimerButton();
                 })
-                .show();
+                .setNegativeButton(android.R.string.cancel, null)
+                .create();
+        dialog.setOnDismissListener(d -> handler.removeCallbacks(statusTick[0]));
+        dialog.show();
+    }
+
+    /** Mengisi teks status dialog sleep timer: sisa waktu atau tidak aktif. */
+    private void updateSleepStatusText(TextView txtStatus) {
+        if (playback == null || !playback.isSleepTimerActive()) {
+            txtStatus.setText(R.string.sleep_timer_inactive);
+            return;
+        }
+        final long remaining = MusicService.getSleepTimerRemainingSeconds();
+        if (remaining < 0) {
+            txtStatus.setText(R.string.sleep_timer_inactive);
+            return;
+        }
+        txtStatus.setText(getString(R.string.sleep_timer_remaining,
+                remaining / 60L, remaining % 60L));
     }
 
     /** Memperbarui tampilan tombol sleep timer sesuai status aktif/nonaktif. */
