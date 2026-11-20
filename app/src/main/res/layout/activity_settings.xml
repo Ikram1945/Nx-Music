@@ -51,12 +51,6 @@
                 android:textSize="12sp"/>
         </LinearLayout>
 
-        <ImageView
-            android:layout_width="26dp"
-            android:layout_height="26dp"
-            android:src="@drawable/ic_settings"
-            android:tint="@color/primary"
-            android:contentDescription="@string/settings"/>
     </LinearLayout>
 
     <!-- Konten scroll -->
@@ -136,50 +130,63 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="14dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:background="@drawable/bg_setting_panel"
+                        android:padding="6dp">
 
                         <RadioButton
                             android:id="@+id/theme_follow_system"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="6dp"
-                            android:background="@drawable/bg_setting_option"
+                            android:background="@drawable/bg_setting_row"
                             android:buttonTint="@color/setting_radio_fixed"
-                            android:paddingStart="14dp"
-                            android:paddingEnd="14dp"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="12dp"
                             android:paddingTop="12dp"
                             android:paddingBottom="12dp"
                             android:text="@string/theme_follow_system"
                             android:textColor="@color/setting_option_text"
-                            android:textSize="14sp"/>
+                            android:textSize="15sp"/>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="42dp"
+                            android:layout_marginEnd="12dp"
+                            android:background="@color/setting_row_divider"/>
+
                         <RadioButton
                             android:id="@+id/theme_light"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="6dp"
-                            android:background="@drawable/bg_setting_option"
+                            android:background="@drawable/bg_setting_row"
                             android:buttonTint="@color/setting_radio_fixed"
-                            android:paddingStart="14dp"
-                            android:paddingEnd="14dp"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="12dp"
                             android:paddingTop="12dp"
                             android:paddingBottom="12dp"
                             android:text="@string/theme_light"
                             android:textColor="@color/setting_option_text"
-                            android:textSize="14sp"/>
+                            android:textSize="15sp"/>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="42dp"
+                            android:layout_marginEnd="12dp"
+                            android:background="@color/setting_row_divider"/>
+
                         <RadioButton
                             android:id="@+id/theme_dark"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="6dp"
-                            android:background="@drawable/bg_setting_option"
+                            android:background="@drawable/bg_setting_row"
                             android:buttonTint="@color/setting_radio_fixed"
-                            android:paddingStart="14dp"
-                            android:paddingEnd="14dp"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="12dp"
                             android:paddingTop="12dp"
                             android:paddingBottom="12dp"
                             android:text="@string/theme_dark"
                             android:textColor="@color/setting_option_text"
-                            android:textSize="14sp"/>
+                            android:textSize="15sp"/>
                     </RadioGroup>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -245,64 +252,83 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="14dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:background="@drawable/bg_setting_panel"
+                        android:padding="6dp">
 
                         <RadioButton
                             android:id="@+id/sort_default"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="6dp"
-                            android:background="@drawable/bg_setting_option"
+                            android:background="@drawable/bg_setting_row"
                             android:buttonTint="@color/setting_radio_fixed"
-                            android:paddingStart="14dp"
-                            android:paddingEnd="14dp"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="12dp"
                             android:paddingTop="12dp"
                             android:paddingBottom="12dp"
                             android:text="@string/sort_default"
                             android:textColor="@color/setting_option_text"
-                            android:textSize="14sp"/>
+                            android:textSize="15sp"/>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="42dp"
+                            android:layout_marginEnd="12dp"
+                            android:background="@color/setting_row_divider"/>
+
                         <RadioButton
                             android:id="@+id/sort_title"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="6dp"
-                            android:background="@drawable/bg_setting_option"
+                            android:background="@drawable/bg_setting_row"
                             android:buttonTint="@color/setting_radio_fixed"
-                            android:paddingStart="14dp"
-                            android:paddingEnd="14dp"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="12dp"
                             android:paddingTop="12dp"
                             android:paddingBottom="12dp"
                             android:text="@string/sort_title"
                             android:textColor="@color/setting_option_text"
-                            android:textSize="14sp"/>
+                            android:textSize="15sp"/>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="42dp"
+                            android:layout_marginEnd="12dp"
+                            android:background="@color/setting_row_divider"/>
+
                         <RadioButton
                             android:id="@+id/sort_artist"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="6dp"
-                            android:background="@drawable/bg_setting_option"
+                            android:background="@drawable/bg_setting_row"
                             android:buttonTint="@color/setting_radio_fixed"
-                            android:paddingStart="14dp"
-                            android:paddingEnd="14dp"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="12dp"
                             android:paddingTop="12dp"
                             android:paddingBottom="12dp"
                             android:text="@string/sort_artist"
                             android:textColor="@color/setting_option_text"
-                            android:textSize="14sp"/>
+                            android:textSize="15sp"/>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="42dp"
+                            android:layout_marginEnd="12dp"
+                            android:background="@color/setting_row_divider"/>
+
                         <RadioButton
                             android:id="@+id/sort_duration"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="6dp"
-                            android:background="@drawable/bg_setting_option"
+                            android:background="@drawable/bg_setting_row"
                             android:buttonTint="@color/setting_radio_fixed"
-                            android:paddingStart="14dp"
-                            android:paddingEnd="14dp"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="12dp"
                             android:paddingTop="12dp"
                             android:paddingBottom="12dp"
                             android:text="@string/sort_duration"
                             android:textColor="@color/setting_option_text"
-                            android:textSize="14sp"/>
+                            android:textSize="15sp"/>
                     </RadioGroup>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -368,92 +394,123 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="14dp"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:background="@drawable/bg_setting_panel"
+                        android:padding="6dp">
 
                         <RadioButton
                             android:id="@+id/custom_theme_default"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="6dp"
-                            android:background="@drawable/bg_setting_option"
+                            android:background="@drawable/bg_setting_row"
                             android:buttonTint="@color/setting_radio_fixed"
-                            android:paddingStart="14dp"
-                            android:paddingEnd="14dp"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="12dp"
                             android:paddingTop="12dp"
                             android:paddingBottom="12dp"
                             android:text="@string/custom_theme_default"
                             android:textColor="@color/setting_option_text"
-                            android:textSize="14sp"/>
+                            android:textSize="15sp"/>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="42dp"
+                            android:layout_marginEnd="12dp"
+                            android:background="@color/setting_row_divider"/>
+
                         <RadioButton
                             android:id="@+id/custom_theme_blue"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="6dp"
-                            android:background="@drawable/bg_setting_option"
+                            android:background="@drawable/bg_setting_row"
                             android:buttonTint="@color/setting_radio_fixed"
-                            android:paddingStart="14dp"
-                            android:paddingEnd="14dp"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="12dp"
                             android:paddingTop="12dp"
                             android:paddingBottom="12dp"
                             android:text="@string/custom_theme_blue"
                             android:textColor="@color/setting_option_text"
-                            android:textSize="14sp"/>
+                            android:textSize="15sp"/>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="42dp"
+                            android:layout_marginEnd="12dp"
+                            android:background="@color/setting_row_divider"/>
+
                         <RadioButton
                             android:id="@+id/custom_theme_green"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="6dp"
-                            android:background="@drawable/bg_setting_option"
+                            android:background="@drawable/bg_setting_row"
                             android:buttonTint="@color/setting_radio_fixed"
-                            android:paddingStart="14dp"
-                            android:paddingEnd="14dp"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="12dp"
                             android:paddingTop="12dp"
                             android:paddingBottom="12dp"
                             android:text="@string/custom_theme_green"
                             android:textColor="@color/setting_option_text"
-                            android:textSize="14sp"/>
+                            android:textSize="15sp"/>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="42dp"
+                            android:layout_marginEnd="12dp"
+                            android:background="@color/setting_row_divider"/>
+
                         <RadioButton
                             android:id="@+id/custom_theme_purple"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="6dp"
-                            android:background="@drawable/bg_setting_option"
+                            android:background="@drawable/bg_setting_row"
                             android:buttonTint="@color/setting_radio_fixed"
-                            android:paddingStart="14dp"
-                            android:paddingEnd="14dp"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="12dp"
                             android:paddingTop="12dp"
                             android:paddingBottom="12dp"
                             android:text="@string/custom_theme_purple"
                             android:textColor="@color/setting_option_text"
-                            android:textSize="14sp"/>
+                            android:textSize="15sp"/>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="42dp"
+                            android:layout_marginEnd="12dp"
+                            android:background="@color/setting_row_divider"/>
+
                         <RadioButton
                             android:id="@+id/custom_theme_orange"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="6dp"
-                            android:background="@drawable/bg_setting_option"
+                            android:background="@drawable/bg_setting_row"
                             android:buttonTint="@color/setting_radio_fixed"
-                            android:paddingStart="14dp"
-                            android:paddingEnd="14dp"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="12dp"
                             android:paddingTop="12dp"
                             android:paddingBottom="12dp"
                             android:text="@string/custom_theme_orange"
                             android:textColor="@color/setting_option_text"
-                            android:textSize="14sp"/>
+                            android:textSize="15sp"/>
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="1dp"
+                            android:layout_marginStart="42dp"
+                            android:layout_marginEnd="12dp"
+                            android:background="@color/setting_row_divider"/>
+
                         <RadioButton
                             android:id="@+id/custom_theme_red"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginBottom="6dp"
-                            android:background="@drawable/bg_setting_option"
+                            android:background="@drawable/bg_setting_row"
                             android:buttonTint="@color/setting_radio_fixed"
-                            android:paddingStart="14dp"
-                            android:paddingEnd="14dp"
+                            android:paddingStart="12dp"
+                            android:paddingEnd="12dp"
                             android:paddingTop="12dp"
                             android:paddingBottom="12dp"
                             android:text="@string/custom_theme_red"
                             android:textColor="@color/setting_option_text"
-                            android:textSize="14sp"/>
+                            android:textSize="15sp"/>
                     </RadioGroup>
                 </LinearLayout>
             </com.google.android.material.card.MaterialCardView>
@@ -519,7 +576,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="12dp"
-                        android:background="@drawable/bg_setting_option"
+                        android:background="@drawable/bg_setting_panel"
                         android:paddingStart="14dp"
                         android:paddingEnd="14dp"
                         android:paddingTop="12dp"
@@ -588,6 +645,7 @@
 
                     <Button
                         android:id="@+id/btn_clear_history"
+                        android:textAllCaps="false"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="14dp"

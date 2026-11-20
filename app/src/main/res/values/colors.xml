@@ -57,6 +57,9 @@
     <color name="setting_option_bg_selected">#DEDEDE</color>
     <color name="setting_option_border">#9E9E9E</color>
     <color name="setting_option_text_fixed">#212121</color>
+    <color name="setting_panel_bg">#F4F1F6</color>
+    <color name="setting_row_selected">#E3DCF0</color>
+    <color name="setting_row_divider">#DCD6E4</color>
 
     <!-- Warna ikon launcher -->
     <color name="ic_launcher_background">#5B4BC4</color>

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Panel terang TETAP untuk satu grup pilihan pengaturan.
+
+     Warna sengaja dikunci terang (tidak ikut tema): bulatan radio/switch
+     dikunci #212121 oleh SettingsActivity.updateRadioButtonTints() agar
+     selalu terbaca. Panel terang ini pasangannya — di tema gelap kartu
+     seksi berwarna gelap, jadi tanpa panel terang radio gelap akan
+     tenggelam. Jangan ganti ke warna tema. -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <solid android:color="@color/setting_panel_bg"/>
+    <corners android:radius="18dp"/>
+    <stroke
+        android:width="1dp"
+        android:color="@color/setting_option_border"/>
+</shape>
