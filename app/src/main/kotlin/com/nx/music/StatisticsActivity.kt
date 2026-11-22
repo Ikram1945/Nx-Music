@@ -563,6 +563,11 @@ class StatisticsActivity : AppCompatActivity() {
             )
             val fill = View(this).apply {
                 setBackgroundResource(R.drawable.bg_bar_fill)
+                // Wajib diberi tint: bg_bar_fill tidak punya warna solid sendiri,
+                // jadi tanpa tint kolomnya transparan (penyebab grafik tampak kosong).
+                backgroundTintList = ColorStateList.valueOf(
+                    ContextCompat.getColor(this@StatisticsActivity, R.color.primary),
+                )
             }
             barArea.addView(
                 fill,
