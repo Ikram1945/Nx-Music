@@ -99,6 +99,15 @@ class PlaybackStats private constructor(context: Context) {
                 editor.putString(KEY_RECORDS, records.toString())
             }
         }
+        // Pencatatan waktu dengar harian untuk tile "Rata-rata Hari Ini":
+        // tambah detik hari ini, bersihkan kunci berumur lebih dari 30 hari.
+        // Baru berjalan sejak fitur ini ditambahkan.
+        val now = System.currentTimeMillis()
+        val dailyListen = readDailyListen()
+        val todayKey = dayKey(now)
+        dailyListen.put(todayKey, dailyListen.optLong(todayKey, 0L) + seconds)
+        pruneDaily(dailyListen, now)
+        editor.putString(KEY_DAILY_LISTEN, dailyListen.toString())
         editor.apply()
     }
 
@@ -247,9 +256,33 @@ class PlaybackStats private constructor(context: Context) {
         return result
     }
 
+    /** Jumlah putar hari ini menurut pencatatan harian. */
+    fun getTodayPlays(): Int = readDaily().optInt(dayKey(System.currentTimeMillis()), 0)
+
+    /**
+     * Total detik mendengar hari ini. Pencatatan waktu dengar harian baru
+     * berjalan sejak fitur ini ditambahkan, jadi pada hari pertama angkanya
+     * bisa lebih kecil dari yang sebenarnya didengar hari itu.
+     */
+    fun getTodayListeningSec(): Long =
+        readDailyListen().optLong(dayKey(System.currentTimeMillis()), 0L)
+
+    /** Rata-rata detik per putar khusus hari ini; 0 bila belum ada putar hari ini. */
+    fun getTodayAverageSec(): Long {
+        val plays = getTodayPlays()
+        return if (plays > 0) getTodayListeningSec() / plays else 0L
+    }
+
     private fun readDaily(): JSONObject =
         try {
             JSONObject(prefs.getString(KEY_DAILY_PLAYS, "{}"))
+        } catch (e: JSONException) {
+            JSONObject()
+        }
+
+    private fun readDailyListen(): JSONObject =
+        try {
+            JSONObject(prefs.getString(KEY_DAILY_LISTEN, "{}"))
         } catch (e: JSONException) {
             JSONObject()
         }
@@ -327,6 +360,7 @@ class PlaybackStats private constructor(context: Context) {
         private const val KEY_RECORDS = "records"
         private const val KEY_HISTORY = "history"
         private const val KEY_DAILY_PLAYS = "daily_plays"
+        private const val KEY_DAILY_LISTEN = "daily_listen"
 
         private const val MAX_HISTORY = 50
         private const val MAX_TOP = 20

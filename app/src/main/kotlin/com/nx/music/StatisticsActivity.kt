@@ -29,6 +29,7 @@ class StatisticsActivity : AppCompatActivity() {
     private lateinit var txtUniqueSongs: TextView
     private lateinit var txtUniqueArtists: TextView
     private lateinit var txtAvgListen: TextView
+    private lateinit var txtAvgToday: TextView
     private lateinit var txtTopHeader: TextView
     private lateinit var txtLongestHeader: TextView
     private lateinit var txtTopArtistsHeader: TextView
@@ -52,6 +53,7 @@ class StatisticsActivity : AppCompatActivity() {
         txtUniqueSongs = findViewById(R.id.txt_unique_songs)
         txtUniqueArtists = findViewById(R.id.txt_unique_artists)
         txtAvgListen = findViewById(R.id.txt_avg_listen)
+        txtAvgToday = findViewById(R.id.txt_avg_today)
         txtTopHeader = findViewById(R.id.txt_top_header)
         txtLongestHeader = findViewById(R.id.txt_longest_header)
         txtTopArtistsHeader = findViewById(R.id.txt_top_artists_header)
@@ -85,6 +87,7 @@ class StatisticsActivity : AppCompatActivity() {
             0L
         }
         txtAvgListen.text = formatAvgDuration(avgSec)
+        txtAvgToday.text = formatAvgDuration(stats.getTodayAverageSec())
 
         buildWeekChart(stats.getDailyPlays(7))
         populateArtists(stats.getTopArtists(5))

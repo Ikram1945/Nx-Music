@@ -147,6 +147,7 @@
     <string name="stat_unique_songs">Lagu Unik</string>
     <string name="stat_unique_artists">Artis Unik</string>
     <string name="stat_avg_listen">Rata-rata/Putar</string>
+    <string name="stat_avg_today">Rata-rata Hari Ini</string>
     <string name="stat_seconds">%1$d dtk</string>
     <string name="stat_avg_min_sec">%1$d mnt %2$d dtk</string>
     <string name="stat_week_title">Aktivitas 7 Hari Terakhir</string>
